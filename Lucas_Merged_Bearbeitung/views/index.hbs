@@ -1,0 +1,12 @@
+﻿{{#if msg}}
+    <div class="alert alert-success">{{msg}}</div>
+{{/if}}
+
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}, {{user.username}}</p>
+{{#if user}}
+	<p>eingeloggt</p>
+{{else}}
+	<p>nicht eingeloggt</p>
+{{/if}}
+

@@ -1,0 +1,295 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>MuWi - Multimediale Wirtschaftsinformatik</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Bootstrap core CSS -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Material Design Bootstrap -->
+    <link href="/css/mdb.min.css" rel="stylesheet">
+    <!-- Your custom styles (optional) -->
+    <link href="/css/style.css" rel="stylesheet">
+</head>
+
+<body class="fixed-sn white-skin">
+   
+    <!--Modal: Login / Register Form-->
+    <div class="modal fade" id="modalLRForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog cascading-modal" role="document">
+            <!--Content-->
+            <div class="modal-content">
+    
+                <!--Modal cascading tabs-->
+                <div class="modal-c-tabs">
+    
+                    <!-- Nav tabs -->
+                    <ul class="nav nav-tabs tabs-2 light-blue darken-3" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#panel7" role="tab"><i class="fa fa-user mr-1"></i> Einloggen</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#panel8" role="tab"><i class="fa fa-user-plus mr-1"></i> Registrieren</a>
+                        </li>
+                    </ul>
+    
+                    <!-- Tab panels -->
+                    <div class="tab-content">
+						
+                        <!--Panel 7-->
+                        <div class="tab-pane fade in show active" id="panel7" role="tabpanel">
+						<form method="post" action="/login">
+                            <!--Body-->
+                            <div class="modal-body mb-1">
+                                <div class="md-form form-sm mb-5">
+                                    <i class="fa fa-envelope prefix"></i>
+                                    <input type="email" id="modalLRInput10" class="form-control form-control-sm" name="username" required>
+                                    <label for="modalLRInput10">HWR-Mail</label>
+                                </div>
+    
+                                <div class="md-form form-sm mb-4">
+                                    <i class="fa fa-lock prefix"></i>
+                                    <input type="password" id="modalLRInput11" class="form-control form-control-sm" name="password" required>
+                                    <label for="modalLRInput11">Passwort</label>
+                                </div>
+                                <div class="text-center mt-2">
+                                    <button type="submit" class="btn btn-info">Login <i class="fa fa-sign-in ml-1"></i></button>
+                                </div>
+                            </div>
+                            <!--Footer-->
+                            <div class="modal-footer">
+                                <div class="options text-center text-md-right mt-1">
+                                    <p><a href="#" class="blue-text">Passwort vergessen?</a></p>
+                                </div>
+                                <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Schließen</button>
+                            </div>
+							</form>
+    
+                        </div>
+                        <!--/.Panel 7-->
+						
+                        <!--Panel 8-->
+                        <div class="tab-pane fade" id="panel8" role="tabpanel">
+							<form method="post" action="/register">
+								<!--Body-->
+								<div class="modal-body">
+									<div class="md-form form-sm mb-5">
+										<i class="fa fa-envelope prefix"></i>
+										<input type="email" id="modalLRInput12" class="form-control form-control-sm validate" name="email" required>
+										<label data-error="wrong" data-success="korrekt" for="modalLRInput12">HWR-Mail</label>
+									</div>
+									
+									<div class="md-form form-sm mb-5">
+										<i class="fa fa-user prefix"></i>
+										<input type="text" id="modalLRInput13" class="form-control form-control-sm validate" name="nachname" required>
+										<label data-error="wrong" data-success="korrekt" for="modalLRInput13" >Nachname</label>
+									</div>
+								
+									<div class="md-form form-sm mb-5">
+										<i class="fa fa-user prefix"></i>
+										<input type="text" id="modalLRInput14" class="form-control form-control-sm validate" name="vorname" required>
+										<label data-error="wrong" data-success="korrekt" for="modalLRInput14">Vorname</label>
+									</div>
+    
+									<div class="md-form form-sm mb-4">
+										<i class="fa fa-lock prefix"></i>
+										<input type="password" id="modalLRInput15" class="form-control form-control-sm validate" name="password" required>
+										<label data-error="wrong" data-success="korrekt" for="modalLRInput15">Passwort</label>
+									</div>
+									<div class="text-center form-sm mt-2">
+										<button type="submit" class="btn btn-info">Registrieren<i class="fa fa-sign-in ml-1"></i></button>
+									</div>
+								</div>
+							
+								
+								<!--Footer-->
+								<div class="modal-footer">
+									<button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Schließen</button>
+								</div>
+							</form>	
+                        </div>
+                        <!--/.Panel 8-->
+						
+                    </div>
+    
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+    <!--Modal: Login / Register Form-->
+      
+    <!--Double navigation-->
+    <header>
+        <!-- Sidebar navigation -->
+        <div id="slide-out" class="side-nav sn-bg-4 fixed">
+            <ul class="custom-scrollbar">
+                <!-- Logo -->
+                <li>
+                    <div class="logo-wrapper waves-light">
+                        <a href="/"><img src="/00_Medien/Logo.png" class="img-fluid flex-center"></a>
+                    </div>
+                </li>
+                <!--/. Logo -->
+                <!--Search Form-->
+                <li>
+                    <form class="search-form" role="search">
+                        <div class="form-group md-form mt-0 pt-1 waves-light">
+                            <input type="text" class="form-control" placeholder="Suche">
+                        </div>
+                    </form>
+                </li>
+                <!--/.Search Form-->
+                <!-- Side navigation links -->
+                <li>
+                    <ul class="collapsible collapsible-accordion">
+                        <li><a class="collapsible-header waves-effect arrow-r"><i class="fa fa-book"></i> Bibliothek<i class="fa fa-angle-down rotate-icon"></i></a>
+                            <div class="collapsible-body">
+                                <ul class="list-unstyled">
+                                    <li><a href="./Dozenten/Lemke" class="waves-effect">Lemke</a>
+                                    </li>
+                                    <li><a href="#" class="waves-effect">Faustmann</a>
+                                    </li>
+                                    <li><a href="#" class="waves-effect">Resch</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li><a class="collapsible-header waves-effect arrow-r"><i class="fa fa-graduation-cap"></i>Kurse<i class="fa fa-angle-down rotate-icon"></i></a>
+                            <div class="collapsible-body">
+                                <ul class="list-unstyled">
+                                    <li><a href="#" class="waves-effect">WI15A</a>
+                                    </li>
+                                    <li><a href="#" class="waves-effect">WI15B</a>
+                                    </li>
+                                    <li><a href="#" class="waves-effect">WI15C</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+                <!--/. Side navigation links -->
+            </ul>
+            <div class="sidenav-bg mask-strong"></div>
+        </div>
+        <!--/. Sidebar navigation -->
+        <!-- Navbar -->
+        <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
+            <!-- SideNav slide-out button -->
+            <div class="float-left">
+                <a href="#" data-activates="slide-out" class="button-collapse black-text"><i class="fa fa-bars"></i></a>
+            </div>
+            <!-- Breadcrumb-->
+            <div class="breadcrumb-dn mr-auto">
+                <p>MuWi - Multimediale Wirtschaftsinformatik</p>
+            </div>
+            <ul class="nav navbar-nav nav-flex-icons ml-auto">
+				{{#if user}}
+					<li class="nav-item mr-5 mt-2">
+						<label>{{user.username}}</label>
+					</li>				
+				{{/if}}
+                <li class="nav-item">
+                    <a href="/Kontakt" class="nav-link"><i class="fa fa-phone"></i> <span class="clearfix d-none d-sm-inline-block">Kontakt</span></a>
+                </li>
+				{{#if user}}
+					<li class="nav-item">
+						<a href="/logout" class="nav-link"><i class="fa fa-user"></i><span class="clearfix d-none d-sm-inline-block">Logout</span></a>
+					</li>
+				{{else}}
+					<li class="nav-item">
+						<a href="" class="nav-link" data-toggle="modal" data-target="#modalLRForm"><i class="fa fa-user"></i><span class="clearfix d-none d-sm-inline-block">Anmelden</span></a>
+					</li>
+				{{/if}}
+            </ul>
+        </nav>
+        <!-- /.Navbar -->
+    </header>
+    <!--/.Double navigation-->
+    
+    <!--Main layout-->
+    <main>
+        {{{body}}}
+    </main>
+    <!--/Main layout-->
+
+    
+     
+	<!--Footer-->
+	<footer class="page-footer font-small pt-4 mt-4">
+
+        <!--Footer Links-->
+        <div class="container text-center text-md-left">
+            <div class="row my-4">
+    
+                <!--First column-->
+                <div class="col-md-4 col-lg-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold">Impressum</h5>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, error amet numquam iure provident
+                        voluptate esse quasi, veritatis totam voluptas nostrum. </p>
+                </div>
+                <!--/.First column-->
+
+                <!--Second column-->
+                <div class="col-md-4 ml-auto col-lg-3">
+                    <h5 class="text-uppercase mb-4 font-weight-bold">Anschrift</h5>
+                    <!--Info-->
+                    <p>
+                        <i class="fa fa-home mr-3"></i> Hochschule für Wirtschaft und Recht Berlin
+                        <p>Campus Lichtenberg</p>
+                        <p>Alt-Friedrichsfelde 60</p>
+                        <p>10315 Berlin</p>
+                    </p>
+                    <p>
+                        <i class="fa fa-envelope mr-3"></i> elearning@hwr-berlin.de</p>
+                    <p>
+                        <i class="fa fa-phone mr-3"></i> 030 30877 - 2534</p>
+                </div>
+                <!--/.Second column-->
+    
+            </div>
+        </div>
+        <!--/.Footer Links-->
+    
+        <!--Copyright-->
+        <div class="footer-copyright py-3 text-center">
+            © 2018 Copyright:
+            <a href="https://mdbootstrap.com/material-design-for-bootstrap/"> MDBootstrap.com </a>
+        </div>
+        <!--/.Copyright-->
+    
+    </footer>
+    <!--/.Footer-->
+                          
+                        
+
+    <!-- SCRIPTS -->
+    <!-- JQuery -->
+    <script type="text/javascript" src="../../js/jquery-3.2.1.min.js"></script>
+
+    <!-- Tooltips -->
+    <script type="text/javascript" src="../../js/popper.min.js"></script>
+
+    <!-- Bootstrap core JavaScript -->
+    <script type="text/javascript" src="../../js/bootstrap.min.js"></script>
+
+    <!-- MDB core JavaScript -->
+    <script type="text/javascript" src="../../js/mdb.min.js"></script>
+    <script>
+
+         // SideNav Initialization
+        $(".button-collapse").sideNav();
+        
+        new WOW().init();
+    
+    </script>
+
+</body>
+
+
+</html>

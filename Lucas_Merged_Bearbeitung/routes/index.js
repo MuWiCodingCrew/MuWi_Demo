@@ -11,9 +11,13 @@ var global = require('../global.js');
 /* GET home page. */
 router.get('/', function (req, res) {
     res.render('index', { title: 'MuWI', msg: '', user: global.loggedUser });
-    dbh.sql("Select * FROM tcontent", function (data) {
-        console.log(data);
-    });
+    //dbh.sql("Select * FROM tcontent", function (data) {
+    //    console.log(data);
+    //});
+});
+
+router.get('/upload', function (req, res) {
+    res.render('upload');
 });
 
 router.get('/Kontakt', function (req, res) {

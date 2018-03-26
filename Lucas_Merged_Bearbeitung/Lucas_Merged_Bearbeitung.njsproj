@@ -219,6 +219,7 @@
     <Content Include="upload\videoSample.mp4" />
     <Content Include="views\Dozenten\Lemke.hbs" />
     <Content Include="views\error.hbs" />
+    <Content Include="views\upload.hbs" />
     <Content Include="views\index.hbs" />
     <Content Include="views\Kontakt.hbs" />
     <Content Include="views\layouts\layout.hbs" />

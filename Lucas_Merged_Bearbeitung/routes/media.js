@@ -2,6 +2,10 @@
 var express = require('express');
 var router = express.Router();
 var fs = require('fs');
+var dbh = require('./databaseHandler');
+var upload = require('express-fileupload');
+
+router.use(upload());
 
 router.get('/document/:path', function (req, res) {
     const path = req.params.path;
@@ -61,6 +65,40 @@ router.get('/stream/:path', function (req, res) {
         }
         res.writeHead(200, head)
         fs.createReadStream(path).pipe(res)
+    }
+});
+
+router.post('/uploadFile', function (req, res) {
+    if (req.files) {
+        var file = req.files.upfile;
+        var filename = file.name;
+        var title = filename.split('.')[0];
+        var type = filename.split('.')[1];
+        var comment = req.body.comment;
+        var path = './upload/';
+        file.mv(path + filename, function (err) {
+            if (err) {
+                console.log(err)
+                res.send("error occured")
+            }
+            else {
+                console.log("Datei hochgeladen.")
+                if (comment == 'Comment...') {
+                    comment = '';
+                };
+                var sqlStatement = "INSERT INTO tcontent (ContentID, Title, Description, ContentType, ContentData) VALUES (3, '" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')";
+                dbh.sql(sqlStatement, function () {
+                    if (err) throw err;
+                    else {
+                    console.log("1 record inserted");
+                    }
+                });
+            }
+        })
+    }
+    else {
+        res.send('No Files selected.');
+        console.log('No Files selected');
     }
 });
 

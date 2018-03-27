@@ -14,7 +14,9 @@
 
 ### Tools
 
-Created with [Nodeclipse](https://github.com/Nodeclipse/nodeclipse-1)
- ([Eclipse Marketplace](http://marketplace.eclipse.org/content/nodeclipse), [site](http://www.nodeclipse.org))   
+Microsoft Visual Studio Projekt
+- User Verwaltung mit MongoDB integriert
+- Anbindung der User-Verwaltung an den DBH und damit die MySQL-DB noch nicht erfolgt
 
-Nodeclipse is free open-source project that grows with your contributions.
+- unter Bibliothek->Lemke ist ein Beispiel für eine Anzeige-Seite unterschiedlicher Medien hinterlegt
+(noch nicht dynamisch)

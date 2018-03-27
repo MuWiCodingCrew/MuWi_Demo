@@ -16,125 +16,128 @@
     <!--/.Indicators-->
     <!--Slides-->
     <div class="carousel-inner" role="listbox">
+        {{#each html}}
+        {{{this}}}
+        {{/each}}
 
         <!--First slide-->
-        <div class="carousel-item active">
+        <!--<div class="carousel-item active">
 
-            <div class="col-md-4">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="../media/image/%2E%2Fupload%2FimageSample.jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Wirtschatfsinformatik</h4>
-                        <p class="card-text">Hier kommt der Kommentar hin</p>
-                        <a class="btn btn-primary" href="../media/image/%2E%2Fupload%2FimageSample.jpg" download="WI_Bild.jpg">Download</a>
-                    </div>
+        <div class="col-md-4">
+            <div class="card mb-2">
+                <img class="img-fluid" src="../media/image/%2E%2Fupload%2F2_imageSample.jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Wirtschatfsinformatik</h4>
+                    <p class="card-text">Hier kommt der Kommentar hin</p>
+                    <a class="btn btn-primary" href="../media/image/%2E%2Fupload%2F2_imageSample.jpg" download="WI_Bild.jpg">Download</a>
                 </div>
             </div>
-
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullScreen()">
-                        <source src="../media/stream/%2E%2Fupload%2Fbrian.mp4" type="video/mp4">
-                    </video>
-                    <div class="card-body">
-                        <h4 class="card-title">Das Leben des Brian</h4>
-                        <p class="card-text">Always look on the bright side of life.</p>
-                        <a class="btn btn-primary" href="../media/stream/%2E%2Fupload%2Fbrian.mp4" download="brian.mp4">Download</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="../media/image/%2E%2Fupload%2FMP3ICON.PNG" />
-                    <audio style="width:auto;" class="img-audio" controls>
-                        <source src="../media/stream/%2E%2Fupload%2FmusicSample.mp3" type="audio/mp3">Your Browser does not support the audio-Element
-                    </audio>
-                    <div class="card-body">
-                        <h4 class="card-title">Fargo</h4>
-                        <p class="card-text">Fargo Theme</p>
-                        <a class="btn btn-primary" href="../media/stream/%2E%2Fupload%2FmusicSample.mp3" download="musicSample.mp3">Download</a>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullScreen()">
+                    <source src="../media/stream/%2E%2Fupload%2F1_DB_SQL.mp4" type="video/mp4">
+                </video>
+                <div class="card-body">
+                    <h4 class="card-title">Das Leben des Brian</h4>
+                    <p class="card-text">Always look on the bright side of life.</p>
+                    <a class="btn btn-primary" href="../media/stream/%2E%2Fupload%2F1_DB_SQL.mp4" download="brian.mp4">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <img class="img-fluid" src="../media/image/%2E%2Fupload%2F3_MP3ICON.PNG" />
+                <audio style="width:auto;" class="img-audio" controls>
+                    <source src="../media/stream/%2E%2Fupload%2F4_musicSample.mp3" type="audio/mp3">Your Browser does not support the audio-Element
+                </audio>
+                <div class="card-body">
+                    <h4 class="card-title">Fargo</h4>
+                    <p class="card-text">Fargo Theme</p>
+                    <a class="btn btn-primary" href="../media/stream/%2E%2Fupload%2F4_musicSample.mp3" download="musicSample.mp3">Download</a>
+                </div>
+            </div>
+        </div>
+
+    </div>-->
         <!--/.First slide-->
         <!--Second slide-->
-        <div class="carousel-item">
+        <!--<div class="carousel-item">
 
-            <div class="col-md-4">
-                <div class="card mb-2">
-                    <object height="300" style="width:auto" type="application/pdf" data="../media/document/%2E%2Fupload%2Fdocument.pdf"></object>
-                    <div class="card-body">
-                        <h4 class="card-title">HWR</h4>
-                        <p class="card-text">Richtlinien für das Verfassen wissenschatlicher Arbeiten.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
+        <div class="col-md-4">
+            <div class="card mb-2">
+                <object height="300" style="width:auto" type="application/pdf" data="../media/document/%2E%2Fupload%2F0_document.pdf"></object>
+                <div class="card-body">
+                    <h4 class="card-title">HWR</h4>
+                    <p class="card-text">Richtlinien für das Verfassen wissenschatlicher Arbeiten.</p>
+                    <a class="btn btn-primary" href="../media/stream/%2E%2Fupload%2F0_document.pdf" download="0_document.pdf">Download</a>
                 </div>
             </div>
+        </div>-
 
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(47).jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a class="btn btn-primary">Download</a>
                 </div>
             </div>
-
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(48).jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/City/4-col/img%20(48).jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a class="btn btn-primary">Download</a>
+                </div>
+            </div>
+        </div>
+
+    </div>-->
         <!--/.Second slide-->
         <!--Third slide-->
-        <div class="carousel-item">
+        <!--<div class="carousel-item">
 
-            <div class="col-md-4">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(53).jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
+        <div class="col-md-4">
+            <div class="card mb-2">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(53).jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a class="btn btn-primary">Download</a>
                 </div>
             </div>
-
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(45).jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 clearfix d-none d-md-block">
-                <div class="card mb-2">
-                    <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(51).jpg" alt="Card image cap">
-                    <div class="card-body">
-                        <h4 class="card-title">Card title</h4>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                        <a class="btn btn-primary">Download</a>
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(45).jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a class="btn btn-primary">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 clearfix d-none d-md-block">
+            <div class="card mb-2">
+                <img class="img-fluid" src="https://mdbootstrap.com/img/Photos/Horizontal/Food/4-col/img%20(51).jpg" alt="Card image cap">
+                <div class="card-body">
+                    <h4 class="card-title">Card title</h4>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a class="btn btn-primary">Download</a>
+                </div>
+            </div>
+        </div>
+
+    </div>-->
         <!--/.Third slide-->
 
     </div>
@@ -156,7 +159,7 @@
                     <div class="row">
                         <div class="col-sm-3">
                             <div class="card mb-2">
-                                <img class="img-fluid" src="../media/image/%2E%2Fupload%2Ffargo.jpg" alt="Card image cap">
+                                <img class="img-fluid" src="../media/image/%2E%2Fupload%2F6_RUP.jpg" alt="Card image cap">
                                 <div class="card-body">
                                     <h4 class="card-title">Card title</h4>
                                     <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
@@ -165,10 +168,10 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-3">
+                        <div class="col-sm-3">+
                             <div class="card mb-2">
                                 <video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullScreen()">
-                                    <source src="../media/stream/%2E%2Fupload%2Fbrian.mp4" type="video/mp4">
+                                    <source src="../media/stream/%2E%2Fupload%2F1_DB_SQL.mp4" type="video/mp4">
                                 </video>
                                 <div class="card-body">
                                     <h4 class="card-title">Card title</h4>
@@ -181,7 +184,7 @@
                         <div class="col-sm-3">
                             <div class="card mb-2">
                                 <video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullScreen()">
-                                    <source src="../media/stream/%2E%2Fupload%2FvideoSample.mp4" type="video/mp4">
+                                    <source src="../media/stream/%2E%2Fupload%2F1_DB_SQL.mp4" type="video/mp4">
                                 </video>
                                 <div class="card-body">
                                     <h4 class="card-title">Card title</h4>
@@ -194,7 +197,7 @@
                         <div class="col-sm-3">
                             <div class="card mb-2">
                                 <video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullScreen()">
-                                    <source src="../media/stream/%2E%2Fupload%2Fmovie.mp4" type="video/mp4">
+                                    <source src="../media/stream/%2E%2Fupload%2F1_DB_SQL.mp4" type="video/mp4">
                                 </video>
                                 <div class="card-body">
                                     <h4 class="card-title">Card title</h4>

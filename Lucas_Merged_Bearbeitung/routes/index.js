@@ -25,7 +25,9 @@ router.get('/Kontakt', function (req, res) {
 });
 
 router.get('/Dozenten/Lemke', function (req, res) {
-    res.render('Dozenten/Lemke', { user: global.loggedUser });
+    dbh.generateNetflix(0, function (data) {
+        res.render('Dozenten/Lemke', { user: global.loggedUser, html: data });
+    }) 
 });
 
 router.post('/register', function(req, res){

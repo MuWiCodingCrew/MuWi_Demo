@@ -25,9 +25,13 @@ router.get('/Kontakt', function (req, res) {
 });
 
 router.get('/Dozenten/Lemke', function (req, res) {
-    dbh.generateNetflix(0, function (data) {
-        res.render('Dozenten/Lemke', { user: global.loggedUser, html: data });
-    }) 
+    dbh.generateNetflix(0, true, function (data) {
+        var dataBig = data;
+        dbh.generateNetflix(0, false, function (data) {
+            var dataSmall = data;
+            res.render('Dozenten/Lemke', { user: global.loggedUser, dataBig: dataBig, dataSmall: dataSmall });
+        });
+    }); 
 });
 
 router.post('/register', function(req, res){

@@ -37,7 +37,14 @@ databaseHandler.sql = function (sqlString, callback) {
     });
 }
 
-databaseHandler.generateNetflix = function (id, callback) {
+databaseHandler.generateNetflix = function (id, isBig, callback) {
+
+    if (isBig == true) {
+        var numberOfItems = 3;
+    } else {
+        var numberOfItems = 4;
+    }
+
     databaseHandler.sql("SELECT * FROM vcontent WHERE chapterid = " + id + ";", function (data) {
         var tmp = "";
         var arr = [];
@@ -52,15 +59,47 @@ databaseHandler.generateNetflix = function (id, callback) {
 
             tmp = "";
 
-            if (i % 3 == 0) {
+            if (i % numberOfItems == 0) {//html-code, der pro neuem Slide oder ganz am Anfang benötigt wird
                 if (i == 0) {
+                    if (isBig == true) { //öffnende Tags und Controls für das große Carousel
+                        tmp += '<div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel">';
+                        tmp += '<div class="controls-top">';
+                        tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>';
+                        tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>';
+                        tmp += '</div>';
+                        tmp += '<div class="carousel-inner" role="listbox">';
+                    } else { //öffnende Tags und Überschrift für das kleine Carousel
+                        tmp += '<div class="container">';
+                        tmp += '<hr>';
+                        tmp += '<div class="col-sm-12">';
+                        tmp += '<h3>Diese Inhalte könnten Sie auch interessieren:</h3>';
+                        tmp += '</div>';
+                        tmp += '<div class="col-sm-12">';
+                        tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">';
+                        tmp += '<div class="carousel-inner" role="listbox">';
+                    }
+
                     tmp += '<div class="carousel-item active">';
+                    if (isBig == false) {
+                        tmp += '<div class="row">';
+                    }
                 } else {
                     tmp += '<div class="carousel-item">';
+                    if (isBig == false) {
+                        tmp += '<div class="row">';
+                    }
                 }
-                tmp += '<div class="col-md-4">';
+                if (isBig == true) {
+                    tmp += '<div class="col-md-4">';
+                } else {
+                    tmp += '<div class="col-sm-3">';
+                }
             } else {
-                tmp += '<div class="col-md-4 clearfix d-none d-md-block">';
+                if (isBig == true) {
+                    tmp += '<div class="col-md-4 clearfix d-none d-md-block">';
+                } else {
+                    tmp += '<div class="col-sm-3">';
+                }
             }
 
             tmp += '<div class="card mb-2">';
@@ -98,8 +137,36 @@ databaseHandler.generateNetflix = function (id, callback) {
             tmp += '</div>';
             tmp += '</div>';
             tmp += '</div>';
-            if (i % 3 == 2) {
+            if (i % numberOfItems == numberOfItems - 1) {
                 tmp += '</div>'
+                if (isBig == false) {
+                    tmp += '</div>';
+                }
+            } else if (i == data.length-1) {
+                tmp += '</div>'
+                if (isBig == false) {
+                    tmp += '</div>';
+                }
+            }
+            if (i == data.length - 1) {
+                if (isBig == true) {//schließende Tags für das große Carousel
+                    tmp += '</div>';
+                    tmp += '</div>';
+                } else {//schließende Tags und Controls für das kleine Carousel
+                    tmp += '</div>';
+                    tmp += '<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">';
+                    tmp += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
+                    tmp += '<span class="sr-only">Previous</span>';
+                    tmp += '</a>';
+                    tmp += '<a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">';
+                    tmp += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
+                    tmp += '<span class="sr-only">Next</span>';
+                    tmp += '</a>';
+                    tmp += '</div>';
+                    tmp += '</div>';
+                    tmp += '</div>';
+                    tmp += '<hr>';
+                }
             }
             arr.push(tmp);
             i++;

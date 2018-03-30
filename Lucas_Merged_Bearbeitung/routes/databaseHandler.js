@@ -173,7 +173,69 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
         }
         return callback(arr);
     });
-}
+};
+
+databaseHandler.generateSidebar = function (callback) {
+    databaseHandler.sql("SELECT * FROM vchapterlist ORDER BY BookID", function (data) {
+        var tmp = -1;
+        var book = new Object();
+        var chapter = new Object();
+        var bookArr = [];
+
+        var html = '';
+        for (var i = 0; i < data.length; i++) { // Schreiben der Bücher und Kapitel in ein Bucharray, bei dem jedes Buch eine Kapitelliste als Attribut hat
+            if (tmp != data[i].BookID) {
+                if (i > 0) {
+                    bookArr.push({ id: book.id, bookTitle: book.bookTitle, author: book.author, aSurname: book.aSurname, aPrename: book.aPrename, chList: book.chList });
+                }
+                tmp = data[i].BookID;
+                book.id = data[i].BookID;
+                book.bookTitle = data[i].BookTitle;
+                book.author = data[i].UserID;
+                book.aSurname = data[i].Surname;
+                book.aPrename = data[i].Prename;
+
+                chapter.id = data[i].ChapterID;
+                chapter.chapterTitle = data[i].ChapterTitle;
+
+                book.chList = new Array(0);
+                book.chList.push({id: chapter.id, chapterTitle: chapter.chapterTitle});
+            } else {
+                chapter.id = data[i].ChapterID;
+                chapter.chapterTitle = data[i].ChapterTitle;
+                book.chList.push({ id: chapter.id, chapterTitle: chapter.chapterTitle });
+                if (i == data.length - 1) {
+                    bookArr.push({id: book.id, bookTitle: book.bookTitle, author: book.author, aSurname: book.aSurname, aPrename: book.aPrename, chList: book.chList});
+                }
+            }
+        }
+
+        console.log(bookArr.length);//Ausgabe BookArray
+        for (var h = 0; h < bookArr.length; h++) {
+            console.log(bookArr[h]);
+        }
+
+        for (let e1 of bookArr) { //Erzeugen des HTML-Codes
+            html += '<li>\n';
+            html += '<ul class="collapsible collapsible-accordion">\n';
+            html += '<li>\n';
+            html += '<a class="collapsible-header waves-effect arrow-r"><i class="fa fa-book"></i>' + e1.bookTitle + '<i class="fa fa-angle-down rotate-icon"></i></a>\n';
+            html += '<div class="collapsible-body">\n';
+            html += '<ul class="list-unstyled">\n';
+            for (let e2 of e1.chList) {
+                html += '<li>\n';
+                html += '<a class="waves-effect" href="/Kapitel/' + e2.id + '">' + e2.chapterTitle + '</a>\n';
+                html += '</li>\n';
+            }
+            html += '</ul>\n';
+            html += '</div>\n';
+            html += '</li>\n';
+            html += '</ul>\n';
+            html += '</li>\n';
+        }
+        return callback(html);
+    });
+};
 
 
 module.exports = databaseHandler;

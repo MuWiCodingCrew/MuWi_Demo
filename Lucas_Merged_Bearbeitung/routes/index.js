@@ -8,28 +8,31 @@ var LocalStrategy = require('passport-local').Strategy;
 var User = require('../models/user');
 var global = require('../global.js');
 
+var sidebar;
+dbh.generateSidebar(function (html) {
+    sidebar = html;
+});
+
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', { title: 'MuWI', msg: '', user: global.loggedUser });
-    //dbh.sql("Select * FROM tcontent", function (data) {
-    //    console.log(data);
-    //});
+    res.render('index', { title: 'MuWI', msg: '', user: global.loggedUser, sidebar: sidebar});
 });
 
 router.get('/upload', function (req, res) {
-    res.render('upload');
+    res.render('upload', {sidebar: sidebar});
 });
 
 router.get('/Kontakt', function (req, res) {
-    res.render('Kontakt', { user: global.loggedUser });
+    res.render('Kontakt', { user: global.loggedUser, sidebar: sidebar});
 });
 
-router.get('/Dozenten/Lemke', function (req, res) {
-    dbh.generateNetflix(0, true, function (data) {
+router.get('/Kapitel/:chapterID', function (req, res) {
+    var id = req.params.chapterID;
+    dbh.generateNetflix(id, true, function (data) {
         var dataBig = data;
-        dbh.generateNetflix(0, false, function (data) {
+        dbh.generateNetflix(id, false, function (data) {
             var dataSmall = data;
-            res.render('Dozenten/Lemke', { user: global.loggedUser, dataBig: dataBig, dataSmall: dataSmall });
+            res.render('Kapitel', { user: global.loggedUser, dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar });
         });
     }); 
 });
@@ -74,7 +77,7 @@ router.post('/register', function(req, res){
 		*/
 
 		
-	res.render('index', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.' });
+	res.render('index', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.', sidebar: sidebar });
 });
 
 //Login User
@@ -113,7 +116,7 @@ router.post('/login',
   function(req, res) {
 	//res.redirect('/');
 
-	res.render('index', { title: 'MuWI', msg: 'Login erfolgreich', user: global.loggedUser });
+	res.render('index', { title: 'MuWI', msg: 'Login erfolgreich', user: global.loggedUser, sidebar: sidebar });
 });
 
 //Logout
@@ -122,7 +125,7 @@ router.get('/logout', function(req, res){
 	//req.flash('success_msg', 'Sie wurden erfolgreich ausgeloggt.');
 	//res.redirect('/users/login');
 	global.loggedUser = '';
-	res.render('index', { title: 'MuWI', msg: 'Sie wurden erfolgreich ausgeloggt.' });
+	res.render('index', { title: 'MuWI', msg: 'Sie wurden erfolgreich ausgeloggt.', sidebar: sidebar });
 });
 
 module.exports = router;

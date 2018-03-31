@@ -39,7 +39,7 @@ router.get('/stream/:path', function (req, res) {
     const fileSize = stat.size
     const range = req.headers.range
     if (range) {
-        console.log('range bekannt')
+        //console.log('range bekannt')
         const parts = range.replace(/bytes=/, "").split("-")
         const start = parseInt(parts[0], 10)
         const end = parts[1]
@@ -58,7 +58,7 @@ router.get('/stream/:path', function (req, res) {
         res.writeHead(206, head)
         file.pipe(res)
     } else {
-        console.log('range unbekannt')
+        //console.log('range unbekannt')
         const head = {
             'Content-Length': fileSize,
             'Content-Type': 'audio/mpeg',

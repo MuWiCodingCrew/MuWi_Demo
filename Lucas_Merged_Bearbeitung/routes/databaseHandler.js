@@ -176,7 +176,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
 };
 
 databaseHandler.generateSidebar = function (callback) {
-    databaseHandler.sql("SELECT * FROM vchapterlist ORDER BY BookID", function (data) {
+    databaseHandler.sql("SELECT * FROM vchapterlist ORDER BY BookID, ChapterID", function (data) {
         var tmp = -1;
         var book = new Object();
         var chapter = new Object();
@@ -210,10 +210,10 @@ databaseHandler.generateSidebar = function (callback) {
             }
         }
 
-        console.log(bookArr.length);//Ausgabe BookArray
-        for (var h = 0; h < bookArr.length; h++) {
-            console.log(bookArr[h]);
-        }
+        //console.log(bookArr.length);//Ausgabe BookArray
+        //for (var h = 0; h < bookArr.length; h++) {
+        //    console.log(bookArr[h]);
+        //}
 
         for (let e1 of bookArr) { //Erzeugen des HTML-Codes
             html += '<li>\n';

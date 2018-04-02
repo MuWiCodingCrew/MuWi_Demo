@@ -18,6 +18,10 @@ router.get('/', function (req, res) {
     res.render('index', { title: 'MuWI', msg: '', user: global.loggedUser, sidebar: sidebar});
 });
 
+router.get('/modal', function (req, res) {
+    res.render('ModalTest', { title: 'MuWI', msg: '', user: global.loggedUser, sidebar: sidebar });
+});
+
 router.get('/upload', function (req, res) {
     res.render('upload', {sidebar: sidebar});
 });

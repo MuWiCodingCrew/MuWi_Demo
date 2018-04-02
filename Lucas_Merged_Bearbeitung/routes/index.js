@@ -15,7 +15,7 @@ dbh.generateSidebar(function (html) {
 
 /* GET home page. */
 router.get('/', function (req, res) {
-    res.render('index', { title: 'MuWI', msg: '', user: global.loggedUser, sidebar: sidebar});
+    res.render('index', { title: 'MuWI', msg: '', sidebar: sidebar});
 });
 
 router.get('/upload', function (req, res) {
@@ -23,7 +23,7 @@ router.get('/upload', function (req, res) {
 });
 
 router.get('/Kontakt', function (req, res) {
-    res.render('Kontakt', { user: global.loggedUser, sidebar: sidebar});
+    res.render('Kontakt', { sidebar: sidebar});
 });
 
 router.get('/Kapitel/:chapterID', function (req, res) {
@@ -32,21 +32,20 @@ router.get('/Kapitel/:chapterID', function (req, res) {
         var dataBig = data;
         dbh.generateNetflix(id, false, function (data) {
             var dataSmall = data;
-            res.render('Kapitel', { user: global.loggedUser, dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar });
+            res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar });
         });
     }); 
 });
 
+// Register
 router.post('/register', function(req, res){
 	var nachname = req.body.nachname;
 	var vorname = req.body.vorname;
 	var username = req.body.email;
-	//var username = req.body.username;
 	var password = req.body.password;
 	var password2 = req.body.password2;
-	//var radio = req.body.radio;
-
-	
+	var radio = req.body.isStudent;
+	console.log(radio);
 
 	var newUser = new User({
 		username: username,
@@ -58,29 +57,36 @@ router.post('/register', function(req, res){
 		if(err) throw err;
 		console.log(user);
 	});
-		
-		/*
-		//  MySQL-DB User anlegen
-		if(radio=='stud'){
-			isStudent = 1;
-		}else{
-			isStudent = 0;
-		}
-		let sql = `INSERT INTO tUser (EMAIL, Surname, Forename, IsStudent) VALUES ('${username}', '${nachname}', '${vorname}', '${isStudent}')`;
-		let query = global.sqldb.query(sql, (err, result) => {
-			if(err){
-				throw err;
-			}
-			console.log('MYSQL-DB user created: \n', result);
-			//res.send('line inserted...');
-		});
-		*/
-
-		
+	
+	//  MySQL-DB User anlegen
+	var isStudent;
+	if(radio=='stud'){
+		isStudent = 1;
+	}else{
+		isStudent = 0;
+	}
+//	let sql = `INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('${username}', '${nachname}', '${vorname}', '${isStudent}')`;
+//	let query = global.sqldb.query(sql, (err, result) => {
+//		if(err){
+//			throw err;
+//		}
+//		console.log('MYSQL-DB user created: \n', result);
+//	});
+	
+	/*
+	var sqlStatement = `INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('${username}', '${nachname}', '${vorname}', '${isStudent}')`;
+    dbh.sql(sqlStatement, function () {
+        if (err) throw err;
+        else {
+        console.log("MySQL-DB: User angelegt");
+        }
+    });
+	*/
+	
 	res.render('index', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.', sidebar: sidebar });
 });
 
-//Login User
+// Login
 passport.use(new LocalStrategy(
  function(username, password, done) {
 	 User.getUserByUsername(username, function(err, user){
@@ -111,21 +117,15 @@ passport.deserializeUser(function(id, done) {
 });
 
 router.post('/login',
-  //passport.authenticate('local', {successRedirect:'/', failureRedirect:'/login',failureFlash: true}),
-		passport.authenticate('local', {failureFlash: true}),
-  function(req, res) {
-	//res.redirect('/');
-
-	res.render('index', { title: 'MuWI', msg: 'Login erfolgreich', user: global.loggedUser, sidebar: sidebar });
+		passport.authenticate('local', {successRedirect:'/', failureRedirect:'/',failureFlash: true}),
+		function(req, res) {
+	res.redirect('/');
 });
 
-//Logout
+// Logout
 router.get('/logout', function(req, res){
 	req.logout();
-	//req.flash('success_msg', 'Sie wurden erfolgreich ausgeloggt.');
-	//res.redirect('/users/login');
-	global.loggedUser = '';
-	res.render('index', { title: 'MuWI', msg: 'Sie wurden erfolgreich ausgeloggt.', sidebar: sidebar });
+	res.redirect('/');
 });
 
 module.exports = router;

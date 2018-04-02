@@ -39,7 +39,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 //Express Session
 app.use(session({
     secret: 'secret',
@@ -72,18 +71,6 @@ app.use(expressValidator({
 //Connect Flash
 app.use(flash());
 
-app.use('/', routes);
-app.use('/users', users);
-app.use('/media', media);
-
-
-//// catch 404 and forward to error handler
-//app.use(function (req, res, next) {
-//    var err = new Error('Not Found');
-//    err.status = 404;
-//    next(err);
-//});
-
 //Global Vars
 app.use(function (req, res, next) {
 	res.locals.success_msg = req.flash('success_msg');
@@ -92,6 +79,10 @@ app.use(function (req, res, next) {
 	res.locals.user = req.user || null;
 	next();
 });
+
+app.use('/', routes);
+app.use('/users', users);
+app.use('/media', media);
 
 // error handlers
 

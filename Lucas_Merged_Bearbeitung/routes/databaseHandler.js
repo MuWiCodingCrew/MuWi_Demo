@@ -48,6 +48,8 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
     databaseHandler.sql("SELECT * FROM vcontent WHERE chapterid = " + id + ";", function (data) {
         var tmp = "";
         var arr = [];
+        var modalhtml = "";
+        var modalarr = [];
         var i = 0;
         var path = "";
         var route = "";
@@ -62,7 +64,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
             if (i % numberOfItems == 0) {//html-code, der pro neuem Slide oder ganz am Anfang benötigt wird
                 if (i == 0) {
                     if (isBig == true) { //öffnende Tags und Controls für das große Carousel
-                        tmp += '<div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel">';
+                        tmp += '<div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel" data-interval="false">';
                         tmp += '<div class="controls-top">';
                         tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>';
                         tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>';
@@ -75,7 +77,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                         tmp += '<h3>Diese Inhalte könnten Sie auch interessieren:</h3>';
                         tmp += '</div>';
                         tmp += '<div class="col-sm-12">';
-                        tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">';
+                        tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">';
                         tmp += '<div class="carousel-inner" role="listbox">';
                     }
 
@@ -108,7 +110,24 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                 case 'png':
                 case 'jpg':
                     route = "../media/image/";
-                    tmp += '<img class="img-fluid" src="' + route + path + '" alt="' + e.Title + '">';
+                    tmp += '<img style="cursor:pointer" class="img-fluid" src="' + route + path + '" alt="' + e.Title + '" data-toggle="modal" data-target="#' + e.ContentID + 'Modal"/>';
+
+                    modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                    modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                    modalhtml += '<div class="modal-content">\n';
+                    modalhtml += '<div class="modal-header">\n';
+                    modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                    modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-body">\n';
+                    modalhtml += '<img class="img-fluid" src="' + route + path + '" alt="' + e.Title + '"/>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-footer">\n';
+                    modalhtml += '<h6>' + e.Description + '</h6>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
                     break;
                 case 'mp4':
                     route = "../media/stream/";
@@ -125,7 +144,27 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                     break;
                 case 'pdf':
                     route = "../media/document/";
-                    tmp += '<object height="300" style="width:auto" type="application/pdf" data="' + route + path + '"></object>';
+                    tmp += '<div style="height:300px" width="auto">';
+                    tmp += '<iframe style="height:100%;width:100%" src="' + route + path + '"></iframe>';
+                    tmp += '<button style="position:relative;float:left;bottom:60%;opacity:0.8;width:90%" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#' + e.ContentID + 'Modal">Open Fullscreen</button>';
+                    tmp += '</div>';
+
+                    modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                    modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                    modalhtml += '<div class="modal-content">\n';
+                    modalhtml += '<div class="modal-header">\n';
+                    modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                    modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-body">\n';
+                    modalhtml += '<iframe width="1000" height="700" src="' + route + path + '#zoom=75"></iframe>';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-footer">\n';
+                    modalhtml += '<h6>' + e.Description + '</h6>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
                     break;
                 default:
             }
@@ -168,9 +207,11 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                     tmp += '<hr>';
                 }
             }
+            modalarr.push(modalhtml);
             arr.push(tmp);
             i++;
         }
+        arr = arr.concat(modalarr);
         return callback(arr);
     });
 };

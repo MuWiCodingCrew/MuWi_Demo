@@ -218,6 +218,9 @@
     <Content Include="upload\4_musicSample.mp3" />
     <Content Include="upload\5_OSI7Schichtenmodell.jpg" />
     <Content Include="upload\6_RUP.jpg" />
+    <Content Include="views\Buch_hinzufuegen.hbs">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="views\ModalTest.hbs" />
     <Content Include="views\Kapitel.hbs" />
     <Content Include="views\error.hbs" />

@@ -138,13 +138,13 @@
     <!--Double navigation-->
     <header>
         <!-- Sidebar navigation -->
-        {{#if user}}
+        
         <div id="slide-out" class="side-nav sn-bg-4 fixed">
-            <ul class="custom-scrollbar" style="padding-left: 0px;">
+            <ul class="custom-scrollbar fixed" style="padding-left: 0px;">
                     
                 <!-- Logo -->
                 <li>
-                    <div class="logo-wrapper waves-light" style="height:160px">
+                    <div class="logo-wrapper waves-light" style="height:200px">
                         <a href="/"><img src="/00_Medien/Logo_Kuh.png" class="img-fluid flex-center"></a>
                     </div>
                 </li>
@@ -159,6 +159,7 @@
                 </li>
                 <!--/.Search Form-->
                 <!-- Side navigation links -->
+				{{#if user}}
                 <li>
                     <ul class="collapsible collapsible-accordion">
                         <li><a class="collapsible-header waves-effect arrow-r"><i class="fa fa-book"></i> Bibliothek<i class="fa fa-angle-down rotate-icon"></i></a>
@@ -169,35 +170,38 @@
                             </div>
                         </li>
                         <li>
-                            <a class="collapsible-header waves-effect arrow-r"><i class="fa fa-graduation-cap"></i>Kurse<i class="fa fa-angle-down rotate-icon"></i></a>
+                            <a class="collapsible-header waves-effect arrow-r"><i class="fa fa-graduation-cap"></i>Meine Listen<i class="fa fa-angle-down rotate-icon"></i></a>
                             <div class="collapsible-body">
                                 <ul class="list-unstyled">
                                     <li>
-                                        <a href="#" class="waves-effect">WI15A</a>
+                                        <a href="/" class="waves-effect">Eigene Listen</a>
                                     </li>
                                     <li>
-                                        <a href="#" class="waves-effect">WI15B</a>
+                                        <a href="/favLists" class="waves-effect">Favorisierte Listen</a>
                                     </li>
-                                    <li>
+                                    <!--<li>
                                         <a href="#" class="waves-effect">WI15C</a>
-                                    </li>
+                                    </li>-->
                                 </ul>
                             </div>
                         </li>
                     </ul>
                 </li>
+				{{/if}}
                 <!--/. Side navigation links -->
             </ul>
             <div class="sidenav-bg mask-strong"></div>
         </div>
-        {{/if}}
+        
         <!--/. Sidebar navigation -->
         <!-- Navbar -->
         <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
             <!-- SideNav slide-out button -->
+			{{#if user}}
             <div class="float-left">
                 <a href="#" data-activates="slide-out" class="button-collapse black-text"><i class="fa fa-bars"></i></a>
             </div>
+			{{/if}}
             <!-- Breadcrumb-->
             <div class="breadcrumb-dn mr-auto">
                 <p>MuWi - Multimediale Wirtschaftsinformatik</p>

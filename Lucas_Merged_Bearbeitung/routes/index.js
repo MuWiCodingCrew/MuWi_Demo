@@ -14,8 +14,12 @@ dbh.generateSidebar(function (html) {
 });
 
 /* GET home page. */
-router.get('/', function (req, res) {
-    res.render('index', { title: 'MuWI', msg: '', sidebar: sidebar});
+router.get('/', ensureAuthenticated, function (req, res) {
+    res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar});
+});
+
+router.get('/indexNoUser', function (req, res) {
+    res.render('indexNoUser', { title: 'MuWi', sidebar: sidebar});
 });
 
 router.get('/modal', function (req, res) {
@@ -28,6 +32,14 @@ router.get('/upload', function (req, res) {
 
 router.get('/Kontakt', function (req, res) {
     res.render('Kontakt', { sidebar: sidebar});
+});
+
+router.get('/myLists', function (req, res) {
+    res.render('myLists', { title: 'Eigene Listen', sidebar: sidebar});
+});
+
+router.get('/favLists', function (req, res) {
+    res.render('favLists', { title: 'Favorisierte Listen', sidebar: sidebar});
 });
 
 router.get('/Kapitel/:chapterID', function (req, res) {
@@ -49,44 +61,27 @@ router.post('/register', function(req, res){
 	var password = req.body.password;
 	var password2 = req.body.password2;
 	var radio = req.body.isStudent;
-	console.log(radio);
 
 	var newUser = new User({
 		username: username,
 		password: password
 	});
 		
-	// PW-DB User anlegen
+	// Mongo-DB User anlegen
 	User.createUser(newUser, function(err, user){
 		if(err) throw err;
 		console.log(user);
 	});
 	
-	//  MySQL-DB User anlegen
+	// MySQL-DB User anlegen
 	var isStudent;
 	if(radio=='stud'){
 		isStudent = 1;
 	}else{
 		isStudent = 0;
-	}
-//	let sql = `INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('${username}', '${nachname}', '${vorname}', '${isStudent}')`;
-//	let query = global.sqldb.query(sql, (err, result) => {
-//		if(err){
-//			throw err;
-//		}
-//		console.log('MYSQL-DB user created: \n', result);
-//	});
-	
-	/*
-	var sqlStatement = `INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('${username}', '${nachname}', '${vorname}', '${isStudent}')`;
-    dbh.sql(sqlStatement, function () {
-        if (err) throw err;
-        else {
-        console.log("MySQL-DB: User angelegt");
-        }
-    });
-	*/
-	
+	};
+	var sqlStatement = "INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('" + username + "', '" + nachname + "', '" + vorname + "', '" + isStudent + "')";
+	dbh.sql(sqlStatement);
 	res.render('index', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.', sidebar: sidebar });
 });
 
@@ -131,5 +126,15 @@ router.get('/logout', function(req, res){
 	req.logout();
 	res.redirect('/');
 });
+
+//Check, ob User angemeldet ist
+function ensureAuthenticated(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	} else {
+		//req.flash('success_msg','Bitte loggen Sie sich ein, um Zugriff auf MuWi zu erhalten.');
+		res.redirect('/indexNoUser');
+	}
+}
 
 module.exports = router;

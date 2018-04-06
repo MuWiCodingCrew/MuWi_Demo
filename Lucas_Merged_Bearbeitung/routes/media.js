@@ -75,26 +75,29 @@ router.post('/uploadFile', function (req, res) {
         var title = filename.split('.')[0];
         var type = filename.split('.')[1];
         var comment = req.body.comment;
+        var list = req.body.chapter;
+        console.log('Ich werde aufgerufen');
+        console.log('File: ' + filename + ' Kommentar: ' + comment + ' Kapitel: ' + list);
         var path = './upload/';
-        file.mv(path + filename, function (err) {
-            if (err) {
-                console.log(err)
-                res.send("error occured")
-            }
-            else {
-                console.log("Datei hochgeladen.")
-                if (comment == 'Comment...') {
-                    comment = '';
-                };
-                var sqlStatement = "INSERT INTO tcontent (ContentID, Title, Description, ContentType, ContentData) VALUES (3, '" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')";
-                dbh.sql(sqlStatement, function () {
-                    if (err) throw err;
-                    else {
-                    console.log("1 record inserted");
-                    }
-                });
-            }
-        })
+        //file.mv(path + filename, function (err) {
+        //    if (err) {
+        //        console.log(err)
+        //        res.send("error occured")
+        //    }
+        //    else {
+        //        console.log("Datei hochgeladen.")
+        //        if (comment == 'Comment...') {
+        //            comment = '';
+        //        };
+        //        var sqlStatement = "INSERT INTO tcontent (ContentID, Title, Description, ContentType, ContentData) VALUES (3, '" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')";
+        //        dbh.sql(sqlStatement, function () {
+        //            if (err) throw err;
+        //            else {
+        //            console.log("1 record inserted");
+        //            }
+        //        });
+        //    }
+        //})
     }
     else {
         res.send('No Files selected.');

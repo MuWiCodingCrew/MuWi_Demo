@@ -1,49 +1,46 @@
-﻿<!--<form class="fileupload" action="media/uploadFile" method="post" enctype="multipart/form-data">
-    <h1>Upload File Here</h1>
-    <input id="fileselect" type="file" name="upfile" value="">
-    <input type="submit" onclick="didUpload()" />
-    <br />
-    <br />
-    <textarea name="comment" cols="35" rows="4">Comment...</textarea>
-    <br />
-    <br />
-    <textarea style="resize:none; overflow-y:scroll;" cols="50" rows="5" id="ausgabefeld"></textarea>
-</form>-->
-
+﻿
 <div class="row">
-    <div class="col-md-6 offset-md-3">
+    <div class="col-md-8 offset-md-2">
         <form class="fileupload" action="media/uploadFile" method="post" enctype="multipart/form-data">
-            <div class="md-form">
-                <div class="file-field">
-                    <div class="btn btn-primary btn-sm float-left">
-                        <span>Datei auswählen</span>
-                        <input type="file">
+            <div class="row">
+                <div class="col-8">
+                    <div class="md-form">
+                        <div class="file-field">
+                            <div class="btn btn-primary btn-sm float-left">
+                                <span>Datei auswählen</span>
+                                <input id="fileselect" type="file" name="upfile" value="">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Bitte wählen sie eine Datei aus.">
+                            </div>
+                        </div>
                     </div>
-                    <div class="file-path-wrapper">
-                        <input class="file-path validate" type="text" placeholder="Bitte wählen sie eine Datei aus.">
+                    <br>
+                    <div class="md-form">
+                        <textarea name="comment" type="text" id="text2" class="md-textarea md-textarea-auto form-control" rows="2"></textarea>
+                        <label for="text2">Kommentar:</label>
                     </div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+
+
+                    <!-- Auto-resizing textarea -->
+
+                </div>
+                <div class="col-4">
+                    <select name="chapter" class="mdb-select colorful-select dropdown-primary" searchable="Search here..">
+                        <option value="" disabled selected>Choose your country</option>
+                        <option value="1">USA</option>
+                        <option value="Germany">Germany</option>
+                        <option value="3">France</option>
+                        <option value="4">Poland</option>
+                        <option value="5">Japan</option>
+                    </select>
+                    <label>Label example</label>
                 </div>
             </div>
         </form>
-
-        <br>
-
-        <!-- Auto-resizing textarea -->
-        <div class="md-form">
-            <textarea type="text" id="text2" class="md-textarea md-textarea-auto form-control" rows="2"></textarea>
-            <label for="text2">Kommentar:</label>
-        </div>
-
-        <div class="text-center mt-4">
-            <button class="btn btn-primary" type="submit">Upload</button>
-        </div>
     </div>
 </div>
 
-<script type="text/javascript">
-        function didUpload() {
-            var file = document.getElementById("fileselect");
-            var ausgabe = document.getElementById("ausgabefeld");
-            ausgabe.innerHTML = ausgabe.innerHTML + file.files.item(0).name+" hochgeladen.\n"
-        }
-</script>

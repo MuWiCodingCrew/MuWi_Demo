@@ -44,6 +44,10 @@ router.get('/favLists', function (req, res) {
 
 router.get('/Kapitel/:chapterID', function (req, res) {
     var id = req.params.chapterID;
+    var author = '';
+    var book = '';
+    var chapter = '';
+    //anhand der chapterID Buch, Autor und Kapitelname ermitteln
     dbh.generateNetflix(id, true, function (data) {
         var dataBig = data;
         dbh.generateNetflix(id, false, function (data) {

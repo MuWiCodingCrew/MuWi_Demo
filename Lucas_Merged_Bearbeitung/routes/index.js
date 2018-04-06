@@ -15,7 +15,7 @@ dbh.generateSidebar(function (html) {
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function (req, res) {
-    res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar});
+    res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar });
 });
 
 router.get('/indexNoUser', function (req, res) {
@@ -26,8 +26,15 @@ router.get('/modal', function (req, res) {
     res.render('ModalTest', { title: 'MuWI', msg: '', user: global.loggedUser, sidebar: sidebar });
 });
 
-router.get('/upload', function (req, res) {
-    res.render('upload_neu', {sidebar: sidebar});
+router.get('/upload/:chapterID', function (req, res) {
+    var chapterID = req.params.chapterID;
+    dbh.sql('SELECT ChapterTitle, BookTitle FROM vchapterlist WHERE ChapterID =' + chapterID, function (data) {
+        var bookTitle = data[0].BookTitle;
+        var chapterTitle = data[0].ChapterTitle;
+        dbh.generateChapterList(function (html) {
+            res.render('upload_indirekt', {sidebar: sidebar, chapterList: html, chapterID: chapterID, chapterTitle: chapterTitle, bookTitle: bookTitle});
+        });
+    });
 });
 
 router.get('/Kontakt', function (req, res) {
@@ -46,15 +53,32 @@ router.get('/Kapitel/:chapterID', function (req, res) {
     var id = req.params.chapterID;
     var author = '';
     var book = '';
-    var chapter = '';
+    var chapterTitle = '';
+    var chapterID = '';
+    var isAuthor;
     //anhand der chapterID Buch, Autor und Kapitelname ermitteln
-    dbh.generateNetflix(id, true, function (data) {
-        var dataBig = data;
-        dbh.generateNetflix(id, false, function (data) {
-            var dataSmall = data;
-            res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar });
+    dbh.sql('SELECT ChapterID, ChapterTitle, BookTitle, Surname, Prename FROM vchapterList WHERE ChapterID=' + id, function (data) {
+        book = data[0].BookTitle;
+        chapterID = data[0].ChapterID;
+        chapterTitle = data[0].ChapterTitle;
+        author = data[0].Prename + ' ' + data[0].Surname;
+        //prüfen, ob User Autor des geöffneten Kapitels oder ein Admin ist, um Bearbeitungs-Button aus- oder einzublenden
+        dbh.sql("SELECT tu.EMail AS EMail FROM vchapterlist AS vcl INNER JOIN tuser AS tu ON tu.UserID=vcl.UserID WHERE vcl.ChapterID =" + chapterID, function (data) {
+            if ((data[0].EMail == req.user.username)||(req.user.username == 'admin@admin')) {
+                isAuthor = true;
+            } else {
+                isAuthor = false;
+            }
+            //kleines und großes Carousel erzeugen
+            dbh.generateNetflix(id, true, function (data) {
+                var dataBig = data;
+                dbh.generateNetflix(id, false, function (data) {
+                    var dataSmall = data;
+                    res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor });
+                });
+            }); 
         });
-    }); 
+    });
 });
 
 // Register

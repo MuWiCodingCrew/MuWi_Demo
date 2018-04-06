@@ -5,6 +5,8 @@ var fs = require('fs');
 var dbh = require('./databaseHandler');
 var upload = require('express-fileupload');
 
+var User = require('../models/user');
+
 router.use(upload());
 
 router.get('/document/:path', function (req, res) {
@@ -68,36 +70,46 @@ router.get('/stream/:path', function (req, res) {
     }
 });
 
-router.post('/uploadFile', function (req, res) {
+router.post('/uploadFile/:chapterID', function (req, res) {
+    var listID = req.params.chapterID;
     if (req.files) {
         var file = req.files.upfile;
         var filename = file.name;
         var title = filename.split('.')[0];
         var type = filename.split('.')[1];
         var comment = req.body.comment;
-        var list = req.body.chapter;
-        console.log('Ich werde aufgerufen');
-        console.log('File: ' + filename + ' Kommentar: ' + comment + ' Kapitel: ' + list);
+        var contentID;
         var path = './upload/';
-        //file.mv(path + filename, function (err) {
-        //    if (err) {
-        //        console.log(err)
-        //        res.send("error occured")
-        //    }
-        //    else {
-        //        console.log("Datei hochgeladen.")
-        //        if (comment == 'Comment...') {
-        //            comment = '';
-        //        };
-        //        var sqlStatement = "INSERT INTO tcontent (ContentID, Title, Description, ContentType, ContentData) VALUES (3, '" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')";
-        //        dbh.sql(sqlStatement, function () {
-        //            if (err) throw err;
-        //            else {
-        //            console.log("1 record inserted");
-        //            }
-        //        });
-        //    }
-        //})
+        file.mv(path + filename, function (err) {
+            if (err) {
+                console.log(err)
+                res.send("error occured")
+            }
+            else {
+                console.log("Datei hochgeladen.")
+                if (comment == 'Comment...') {
+                    comment = '';
+                };
+                var sqlInserttcontent = "INSERT INTO tcontent (Title, Description, ContentType, ContentData) VALUES ('" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')"; 
+                dbh.sql(sqlInserttcontent, function (result) {
+                    if (err) throw err;
+                    else {
+                        dbh.sql("SELECT UserID FROM tuser WHERE EMail ='"+req.user.username+"'", function (data) {
+                            var userID = data[0].UserID;
+                            contentID = result.insertId;
+                            var sqlInserttcontentaffiliation = "INSERT INTO tcontentaffiliation (ListID, ContentID) VALUES (" + listID + ", " + contentID + ")";
+                            var sqlInserttcontentmanagement = "INSERT INTO tcontentmanagement (ContentID, UserID, IsCreator, Rating, UserComent) VALUES (" + contentID + ", " + userID + ", 1, '', '')";
+                            dbh.sql(sqlInserttcontentaffiliation, function () {
+                                if (err) throw err;
+                            });
+                            dbh.sql(sqlInserttcontentmanagement, function () {
+                                if (err) throw err;
+                            });
+                        });
+                    }
+                });
+            }
+        })
     }
     else {
         res.send('No Files selected.');

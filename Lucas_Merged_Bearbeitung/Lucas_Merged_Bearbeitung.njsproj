@@ -221,14 +221,17 @@
     <Content Include="views\Buch_hinzufuegen.hbs">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="views\favLists.hbs" />
+    <Content Include="views\indexNoUser.hbs" />
     <Content Include="views\ModalTest.hbs" />
     <Content Include="views\Kapitel.hbs" />
     <Content Include="views\error.hbs" />
-    <Content Include="views\upload.hbs" />
+    <Content Include="views\newList.hbs" />
     <Content Include="views\index.hbs" />
     <Content Include="views\Kontakt.hbs" />
     <Content Include="views\layouts\layout.hbs" />
-    <Content Include="views\upload_neu.hbs" />
+    <Content Include="views\upload_indirekt.hbs" />
+    <Content Include="views\upload_direkt.hbs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />

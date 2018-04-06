@@ -37,6 +37,17 @@ databaseHandler.sql = function (sqlString, callback) {
     });
 }
 
+databaseHandler.generateChapterList = function (callback) {
+    userID = 5; // muss angepasst und durch einen Parameter gespeist werden
+    html = '<option value="" disabled selected>Wähle Buch, Kapitel</option>\n';
+    databaseHandler.sql('SELECT ChapterID, ChapterTitle, BookTitle FROM vchapterlist WHERE UserID =' + userID, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            html += '<option value="' + data[i].ChapterID + '">' + data[i].BookTitle + ', ' + data[i].ChapterTitle + '</option>\n';
+        }
+    return callback(html);
+    });
+};
+
 databaseHandler.generateNetflix = function (id, isBig, callback) {
 
     if (isBig == true) {

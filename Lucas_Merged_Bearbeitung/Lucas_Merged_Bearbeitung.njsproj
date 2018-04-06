@@ -78,6 +78,7 @@
     <Compile Include="routes\users.js" />
     <Content Include="package-lock.json" />
     <Content Include="package.json" />
+    <Content Include="public\00_Medien\Logo_Kuh.png" />
     <Content Include="public\00_Medien\Logo.png" />
     <Content Include="public\css\bootstrap.css" />
     <Content Include="public\css\bootstrap.min.css" />
@@ -224,6 +225,7 @@
     <Content Include="views\index.hbs" />
     <Content Include="views\Kontakt.hbs" />
     <Content Include="views\layouts\layout.hbs" />
+    <Content Include="views\upload_neu.hbs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />

@@ -23,7 +23,7 @@ router.get('/modal', function (req, res) {
 });
 
 router.get('/upload', function (req, res) {
-    res.render('upload', {sidebar: sidebar});
+    res.render('upload_neu', {sidebar: sidebar});
 });
 
 router.get('/Kontakt', function (req, res) {

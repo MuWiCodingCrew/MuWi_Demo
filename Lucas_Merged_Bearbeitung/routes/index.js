@@ -4,6 +4,7 @@ var router = express.Router();
 var dbh = require('./databaseHandler');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var bodyParser = require('body-Parser');
 
 var User = require('../models/user');
 var global = require('../global.js');
@@ -41,21 +42,26 @@ router.get('/Kontakt', function (req, res) {
     res.render('Kontakt', { sidebar: sidebar});
 });
 
-router.get('/myLists', function (req, res) {
+router.get('/myLists', ensureAuthenticated, function (req, res) {
     res.render('myLists', { title: 'Eigene Listen', sidebar: sidebar});
 });
 
-router.get('/favLists', function (req, res) {
+router.get('/favLists', ensureAuthenticated, function (req, res) {
     res.render('favLists', { title: 'Favorisierte Listen', sidebar: sidebar});
 });
 
-router.get('/Kapitel/:chapterID', function (req, res) {
+router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
     var id = req.params.chapterID;
     var author = '';
     var book = '';
     var chapterTitle = '';
     var chapterID = '';
     var isAuthor;
+    var userData;
+    dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function(data){
+    	userData = data[0];
+    });
+    
     //anhand der chapterID Buch, Autor und Kapitelname ermitteln
     dbh.sql('SELECT ChapterID, ChapterTitle, BookTitle, Surname, Prename FROM vchapterList WHERE ChapterID=' + id, function (data) {
         book = data[0].BookTitle;
@@ -74,11 +80,20 @@ router.get('/Kapitel/:chapterID', function (req, res) {
                 var dataBig = data;
                 dbh.generateNetflix(id, false, function (data) {
                     var dataSmall = data;
-                    res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor });
+                    res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor, userData: userData });
                 });
             }); 
         });
     });
+});
+
+router.post("/saveRating",function(req, res){
+	  dbh.rateContent(req.body.userid, req.body.contentid, req.body.comment, req.body.rating, function(){
+	    var myObj = {
+	      success: true
+	    }
+	    res.send(JSON.stringify(myObj));
+	  });
 });
 
 // Register

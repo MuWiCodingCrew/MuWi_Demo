@@ -98,7 +98,7 @@ router.post('/uploadFile/:chapterID', function (req, res) {
                             var userID = data[0].UserID;
                             contentID = result.insertId;
                             var sqlInserttcontentaffiliation = "INSERT INTO tcontentaffiliation (ListID, ContentID) VALUES (" + listID + ", " + contentID + ")";
-                            var sqlInserttcontentmanagement = "INSERT INTO tcontentmanagement (ContentID, UserID, IsCreator, Rating, UserComent) VALUES (" + contentID + ", " + userID + ", 1, '', '')";
+                            var sqlInserttcontentmanagement = "INSERT INTO tcontentmanagement (ContentID, UserID, IsCreator, UserComent) VALUES (" + contentID + ", " + userID + ", 1, '')";
                             dbh.sql(sqlInserttcontentaffiliation, function () {
                                 if (err) throw err;
                             });

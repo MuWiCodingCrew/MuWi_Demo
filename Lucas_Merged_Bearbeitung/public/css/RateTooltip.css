@@ -1,0 +1,31 @@
+.rating {
+  font-size:28pt;
+  margin-bottom:20px;
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+}
+.rating > span:hover:before,
+.rating > span:hover ~ span:before {
+   content: "\2605";
+   position: absolute;
+   color:orange;
+}
+
+.rating > span.starClicked:before,
+.rating > span.starClicked ~ span:before{
+   content: "\2605";
+   position: absolute;
+   color:orange;
+}
+
+#rate_CommentBox{
+  resize:none;
+  margin-bottom:10px;
+  height:100px;
+  width:468px;
+}

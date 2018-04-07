@@ -1,4 +1,5 @@
 // Das Ranking basiert auf der Annahme, dass der am besten passendste Inhalt nur Tags enthält, die alle zur durchsuchten Liste gehören + die meisten Tags enthält + die Tags des Inhalts häufig in der Liste vorkommen
+var dbh = require("./databaseHandler")
 var fpgrowth = require("/Users/maria/node_modules/node-fpgrowth/dist/fpgrowth");
 var _ = require('underscore');
 //Content erschaffen und Ähnlichkeit ausrechnen
@@ -6,6 +7,9 @@ function Content(id, tags){
     this.id = id;
     this.tags = _.uniq(tags);
     this.similarity;
+    this.addTag = function(str){
+        this.tags.push(str);
+    }
     this.setSimilarity = function(tagList){
         var tagFreq = 0;
         for (let e of this.tags){
@@ -23,20 +27,68 @@ function Content(id, tags){
     }
 }
 
-// Liste von Tags zu denen Ähnlichkeit gesucht wird
-var chapter1T = ['swe', 'uml', 'oop', 'java', 'java', 'klassen', 'vererbung', 'klassen', 'klassendiagramm', 'uml', 'klassen', 'vererbung', 'oop'];
+var contentAssociation = {}
+
+
+//var chapter1T = ['swe', 'uml', 'oop', 'java', 'java', 'klassen', 'vererbung', 'klassen', 'klassendiagramm', 'uml', 'klassen', 'vererbung', 'oop'];
 // Entfernen von Duplikaten aus der zuvergleichenden Tagliste
 //chapter1T = _.uniq(chapter1T);
-
+/*
 //Testobjekte
-var content1 = new Content(1, ['swe', 'uml', 'entwurfmodelle']);
+var content1 = new Content(1, ['Geschäftsmodelle', 'Systems of Record', 'Enterprise Resource Planning']);
 var content2 = new Content(2, ['oop', 'klassen', 'oop', 'vererbung', 'klassendiagramm']);
 var content3 = new Content(3, ['oop', 'klassen', 'vererbung']);
 var content4 = new Content(4, ['marketing', '7P']);
-var content5 = new Content(5, ['swe', 'embeddedsystems', 'systemsofengagement']);
-var content6 = new Content(6, ['uml']);
+var content5 = new Content(5, ['Supply Chain Management', 'embeddedsystems', 'Systems of Engagement']);
+var content6 = new Content(6, ['Digitalisierung']);
 
 var arrCont = [content1, content2, content3, content4, content5, content6];
+*/
+// Liste von Tags zu denen Ähnlichkeit gesucht wird
+contentAssociation.CalculateSimilarity = function (chapterId, func) {
+    dbh.sql('SELECT tagTitle FROM vtaglist WHERE ChapterID =' + chapterId + ';', function (chapTags) {
+        dbh.sql('Select tagTitle, ContentID FROM vtaglist WHERE ContentID NOT IN (SELECT ContentID FROM vcontent WHERE ChapterID =' + chapterId + ');', function (data) {
+            var arrCont = [];
+            var tmpId = 0;
+            var tmpCont;
+
+            for (let i = 0; i < data.length; i++) {
+                if (data[i].ContentID === tmpId) {
+                    tmpCont.addTag(data[i].tagTitle);
+                } else {
+                    if (typeof tmpCont == "undefined") {
+                        tmpId = data[i].ContentID;
+                        tmpCont = new Content(tmpId, [data[i].tagTitle]);
+                    } else {
+                        tmpId = data[i].ContentID;
+                        arrCont.push(tmpCont);
+                        tmpCont = new Content(tmpId, [data[i].tagTitle]);
+                    }
+                }
+            }
+            arrCont.push(tmpCont);
+
+            var chapterTags = [];
+            for (let e of chapTags) {
+                chapterTags.push(e.tagTitle);
+            }
+
+            //Durchlaufen der zu prüfenden Arrays und berechnen der Ähnlichkeit
+            for (let e of arrCont) {
+                e.setSimilarity(chapterTags);
+            }
+
+            //Sortieren der zu prüfenden Arrays nach Ähnlichkeit & Anzahl der Tags
+            arrCont.sort(matchSort);
+
+            func(arrCont);
+        });
+    });
+}
+
+contentAssociation.CalculateSimilarity(1, function(data){
+    console.log(data);
+})
 
 //Liste der verglichenen Contents sortieren nach Ähnlichkeit & Anzahl der passenden Tags
 var matchSort = function(a,b){
@@ -58,15 +110,11 @@ var matchSort = function(a,b){
     }
 }
 
-//Durchlaufen der zu prüfenden Arrays und berechnen der Ähnlichkeit
-for (let e of arrCont){
-    e.setSimilarity(chapter1T);
-}
 
-//Sortieren der zu prüfenden Arrays nach Ähnlichkeit & Anzahl der Tags
-arrCont.sort(matchSort);
 
-console.log(arrCont);
+
+
+
 
 /*to do:
 - Anbinden an Datenbank
@@ -110,7 +158,8 @@ function executeFPG(data, checkvalue, func){
     });
 }
 
-executeFPG(transactions, 2, function(Wurstgesicht){
+/*executeFPG(transactions, 2, function(Wurstgesicht){
     console.log(Wurstgesicht);
-});
+});*/
 
+module.exports = contentAssociation;

@@ -227,6 +227,7 @@
     <Content Include="views\ModalTest.hbs" />
     <Content Include="views\Kapitel.hbs" />
     <Content Include="views\error.hbs" />
+    <Content Include="views\ContentList.hbs" />
     <Content Include="views\newList.hbs" />
     <Content Include="views\index.hbs" />
     <Content Include="views\Kontakt.hbs" />

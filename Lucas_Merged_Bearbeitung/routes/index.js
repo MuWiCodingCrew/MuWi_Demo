@@ -19,6 +19,13 @@ router.get('/', ensureAuthenticated, function (req, res) {
     res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar });
 });
 
+router.post('/contentlist', ensureAuthenticated, function (req, res) {
+    dbh.generateContentList(req.body.searchstring, function (arr) {
+        var clist = arr;
+        res.render('ContentList', { sidebar: sidebar, clist: clist });
+    });
+});
+
 router.get('/indexNoUser', function (req, res) {
     res.render('indexNoUser', { title: 'MuWi', sidebar: sidebar});
 });

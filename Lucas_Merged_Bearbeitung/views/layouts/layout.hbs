@@ -14,19 +14,21 @@
     <link href="/css/mdb.min.css" rel="stylesheet">
     <!-- Your custom styles (optional) -->
     <link href="/css/style.css" rel="stylesheet">
+    <!-- JQuery -->
+    <script type="text/javascript" src="../../js/jquery-3.2.1.min.js"></script>
 </head>
 
 <body class="fixed-sn white-skin">
-   
+
     <!--Modal: Login / Register Form-->
     <div class="modal fade" id="modalLRForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog cascading-modal" role="document">
             <!--Content-->
             <div class="modal-content">
-    
+
                 <!--Modal cascading tabs-->
                 <div class="modal-c-tabs">
-    
+
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs tabs-2 light-blue darken-3" role="tablist">
                         <li class="nav-item">
@@ -36,10 +38,10 @@
                             <a class="nav-link" data-toggle="tab" href="#panel8" role="tab"><i class="fa fa-user-plus mr-1"></i> Registrieren</a>
                         </li>
                     </ul>
-    
+
                     <!-- Tab panels -->
                     <div class="tab-content">
-						
+
                         <!--Panel 7-->
                         <div class="tab-pane fade in show active" id="panel7" role="tabpanel">
 						<form method="post" action="/login">
@@ -50,7 +52,7 @@
                                     <input type="email" id="modalLRInput10" class="form-control form-control-sm" name="username" required>
                                     <label for="modalLRInput10">HWR-Mail</label>
                                 </div>
-    
+
                                 <div class="md-form form-sm mb-4">
                                     <i class="fa fa-lock prefix"></i>
                                     <input type="password" id="modalLRInput11" class="form-control form-control-sm" name="password" required>
@@ -68,10 +70,10 @@
                                 <button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Schließen</button>
                             </div>
 							</form>
-    
+
                         </div>
                         <!--/.Panel 7-->
-						
+
                         <!--Panel 8-->
                         <div class="tab-pane fade" id="panel8" role="tabpanel">
 							<form method="post" action="/register">
@@ -82,19 +84,19 @@
 										<input type="email" id="modalLRInput12" class="form-control form-control-sm validate" name="email" required>
 										<label data-error="Fehler" data-success="" for="modalLRInput12">HWR-Mail</label>
 									</div>
-									
+
 									<div class="md-form form-sm mb-5">
 										<i class="fa fa-user prefix"></i>
 										<input type="text" id="modalLRInput13" class="form-control form-control-sm validate" name="nachname" required>
 										<label data-success="" for="modalLRInput13" >Nachname</label>
 									</div>
-								
+
 									<div class="md-form form-sm mb-5">
 										<i class="fa fa-user prefix"></i>
 										<input type="text" id="modalLRInput14" class="form-control form-control-sm validate" name="vorname" required>
 										<label data-success="" for="modalLRInput14">Vorname</label>
 									</div>
-									
+
 									<div class="md-form form-sm mt-5 mb-5">
 										<div class="form-check">
 											<input class="form-check-input" name="isStudent" type="radio" id="radio100" value="stud" checked>
@@ -106,7 +108,7 @@
 											<label class="form-check-label" for="radio101">Ich bin Dozent</label>
 										</div>
 									</div>
-    
+
 									<div class="md-form form-sm mb-4">
 										<i class="fa fa-lock prefix"></i>
 										<input type="password" id="modalLRInput15" class="form-control form-control-sm validate" name="password" required>
@@ -116,32 +118,32 @@
 										<button type="submit" class="btn btn-info">Registrieren<i class="fa fa-sign-in ml-1"></i></button>
 									</div>
 								</div>
-							
-								
+
+
 								<!--Footer-->
 								<div class="modal-footer">
 									<button type="button" class="btn btn-outline-info waves-effect ml-auto" data-dismiss="modal">Schließen</button>
 								</div>
-							</form>	
+							</form>
                         </div>
                         <!--/.Panel 8-->
-						
+
                     </div>
-    
+
                 </div>
             </div>
             <!--/.Content-->
         </div>
     </div>
     <!--Modal: Login / Register Form-->
-      
+
     <!--Double navigation-->
     <header>
         <!-- Sidebar navigation -->
-        
+
         <div id="slide-out" class="side-nav sn-bg-4 fixed">
             <ul class="custom-scrollbar fixed" style="padding-left: 0px;">
-                    
+
                 <!-- Logo -->
                 <li>
                     <div class="logo-wrapper waves-light" style="height:200px">
@@ -192,7 +194,7 @@
             </ul>
             <div class="sidenav-bg mask-strong"></div>
         </div>
-        
+
         <!--/. Sidebar navigation -->
         <!-- Navbar -->
         <nav class="navbar fixed-top navbar-toggleable-md navbar-expand-lg scrolling-navbar double-nav">
@@ -210,7 +212,7 @@
 				{{#if user}}
 					<li class="nav-item mr-5 mt-2">
 						<label>{{user.username}}</label>
-					</li>				
+					</li>
 				{{/if}}
                 <li class="nav-item">
                     <a href="/Kontakt" class="nav-link"><i class="fa fa-phone"></i> <span class="clearfix d-none d-sm-inline-block">Kontakt</span></a>
@@ -229,22 +231,22 @@
         <!-- /.Navbar -->
     </header>
     <!--/.Double navigation-->
-    
+
     <!--Main layout-->
     <main>
         {{{body}}}
     </main>
     <!--/Main layout-->
 
-    
-     
+
+
 	<!--Footer-->
 	<footer class="page-footer font-small pt-4 mt-4">
 
         <!--Footer Links-->
         <div class="container text-center text-md-left">
             <div class="row my-4">
-    
+
                 <!--First column-->
                 <div class="col-md-4 col-lg-3">
                     <h5 class="text-uppercase mb-4 font-weight-bold">Impressum</h5>
@@ -269,26 +271,23 @@
                         <i class="fa fa-phone mr-3"></i> 030 30877 - 2534</p>
                 </div>
                 <!--/.Second column-->
-    
+
             </div>
         </div>
         <!--/.Footer Links-->
-    
+
         <!--Copyright-->
         <div class="footer-copyright py-3 text-center">
                 © 2018 Copyright MuWiCodingCrew
         </div>
         <!--/.Copyright-->
-    
+
     </footer>
     <!--/.Footer-->
-                          
-                        
+
+
 
     <!-- SCRIPTS -->
-    <!-- JQuery -->
-    <script type="text/javascript" src="../../js/jquery-3.2.1.min.js"></script>
-
     <!-- Tooltips -->
     <script type="text/javascript" src="../../js/popper.min.js"></script>
 
@@ -301,9 +300,9 @@
 
          // SideNav Initialization
         $(".button-collapse").sideNav();
-        
+
         new WOW().init();
-    
+
     </script>
 
 </body>

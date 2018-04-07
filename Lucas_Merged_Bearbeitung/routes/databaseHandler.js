@@ -3,16 +3,16 @@ var databaseHandler = {};
 
 databaseHandler.dbConn = mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "test",
+    user: "Admin",
+    password: "NodeJS-SQL",
     database: "muwi"
 });
 
 databaseHandler.pool = mysql.createPool({
     connectionLimit: 100,
     host: 'localhost',
-    user: 'admin',
-    password: 'test',
+    user: 'Admin',
+    password: 'NodeJS-SQL',
     database: 'muwi',
     debug: false
 });
@@ -173,6 +173,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
             tmp += '<h4 class="card-title"> ' + e.Title + ' </h4>';
             tmp += '<p class="card-text">' + e.Description + '</p>';
             tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
+            tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="'+e.ContentID+'" data-chapterid="'+e.ChapterID+'">Rate Me</button>';
             tmp += '</div>';
             tmp += '</div>';
             tmp += '</div>';
@@ -278,5 +279,9 @@ databaseHandler.generateSidebar = function (callback) {
     });
 };
 
+databaseHandler.rateContent = function(userid, contentid, comment, rating, func){
+  databaseHandler.sql("INSERT INTO tcontentmanagement (userid, contentid, iscreator, usercomment, rating) VALUES ("+userid+", "+contentid+", 0, '"+comment+"', "+rating+");");
+  func();
+}
 
 module.exports = databaseHandler;

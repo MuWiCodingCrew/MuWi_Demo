@@ -4,7 +4,7 @@ var router = express.Router();
 var dbh = require('./databaseHandler');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-
+var bodyParser = require('body-Parser');
 var User = require('../models/user');
 var global = require('../global.js');
 
@@ -50,8 +50,19 @@ router.get('/Kapitel/:chapterID', function (req, res) {
             var dataSmall = data;
             res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar });
         });
-    }); 
+    });
 });
+
+router.post("/saveRating",function(req, res){
+  dbh.rateContent(req.body.userid, req.body.contentid, req.body.comment, req.body.rating, function(){
+    var myObj = {
+      success: true
+    }
+    res.send(JSON.stringify(myObj));
+  });
+});
+
+
 
 // Register
 router.post('/register', function(req, res){
@@ -66,13 +77,13 @@ router.post('/register', function(req, res){
 		username: username,
 		password: password
 	});
-		
+
 	// Mongo-DB User anlegen
 	User.createUser(newUser, function(err, user){
 		if(err) throw err;
 		console.log(user);
 	});
-	
+
 	// MySQL-DB User anlegen
 	var isStudent;
 	if(radio=='stud'){

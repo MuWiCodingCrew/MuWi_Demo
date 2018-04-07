@@ -139,7 +139,7 @@
     <header>
         <!-- Sidebar navigation -->
         
-        <div id="slide-out" class="side-nav sn-bg-4 fixed">
+        <div id="slide-out" class="side-nav fixed">
             <ul class="custom-scrollbar fixed" style="padding-left: 0px;">
                     
                 <!-- Logo -->
@@ -230,23 +230,26 @@
     </header>
     <!--/.Double navigation-->
     
-    <!--Main layout-->
-    <main>
-        {{{body}}}
-    </main>
-    <!--/Main layout-->
+    
 
     
-     
-	<!--Footer-->
-	<footer class="page-footer font-small pt-4 mt-4">
+    <div id="wrapper">
+		<div id="content">
+			<!--Main layout-->
+			<main>
+				{{{body}}}
+			</main>
+			<!--/Main layout--></div>
+		<div id="footer">
+		<!--Footer-->
+	<footer class="page-footer font-small pt-4 mt-4 align-items-end">
 
         <!--Footer Links-->
         <div class="container text-center text-md-left">
             <div class="row my-4">
     
                 <!--First column-->
-                <div class="col-md-4 col-lg-3">
+                <div class="col-md-4 col-lg-4">
                     <h5 class="text-uppercase mb-4 font-weight-bold">Impressum</h5>
                     <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, error amet numquam iure provident
                         voluptate esse quasi, veritatis totam voluptas nostrum. </p>
@@ -254,7 +257,7 @@
                 <!--/.First column-->
 
                 <!--Second column-->
-                <div class="col-md-4 ml-auto col-lg-3">
+                <div class="col-md-4 ml-auto col-lg-4">
                     <h5 class="text-uppercase mb-4 font-weight-bold">Anschrift</h5>
                     <!--Info-->
                     <p>
@@ -282,6 +285,12 @@
     
     </footer>
     <!--/.Footer-->
+		</div>
+			
+		
+	</div>
+	
+	
                           
                         
 
@@ -298,7 +307,20 @@
     <!-- MDB core JavaScript -->
     <script type="text/javascript" src="../../js/mdb.min.js"></script>
     <script>
-
+		$(document).ready(function() {
+			var movementStrength = 25;
+			var height = movementStrength / $(window).height();
+			var width = movementStrength / $(window).width();
+			$("body").mousemove(function(e){
+				var pageX = e.pageX - ($(window).width() / 2);
+				var pageY = e.pageY - ($(window).height() / 2);
+				var newvalueX = width * pageX * -1 - 25;
+				var newvalueY = height * pageY * -1 - 50;
+				$('body').css("background-position", newvalueX+"px     "+newvalueY+"px");
+			});
+		});
+		
+		
          // SideNav Initialization
         $(".button-collapse").sideNav();
         

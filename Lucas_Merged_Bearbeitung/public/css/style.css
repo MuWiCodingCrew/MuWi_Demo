@@ -2,3 +2,21 @@
 .chapter-wrapper{
     color: black;
 }
+
+html, body {
+    height: 100%;
+}
+#wrapper {
+    position: relative;
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+}
+#content {
+    padding-bottom: 386px;
+}
+#footer {
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}

@@ -37,6 +37,17 @@ databaseHandler.sql = function (sqlString, callback) {
     });
 }
 
+databaseHandler.generateChapterList = function (callback) {
+    userID = 5; // muss angepasst und durch einen Parameter gespeist werden
+    html = '<option value="" disabled selected>Wähle Buch, Kapitel</option>\n';
+    databaseHandler.sql('SELECT ChapterID, ChapterTitle, BookTitle FROM vchapterlist WHERE UserID =' + userID, function (data) {
+        for (var i = 0; i < data.length; i++) {
+            html += '<option value="' + data[i].ChapterID + '">' + data[i].BookTitle + ', ' + data[i].ChapterTitle + '</option>\n';
+        }
+    return callback(html);
+    });
+};
+
 databaseHandler.generateNetflix = function (id, isBig, callback) {
 
     if (isBig == true) {
@@ -71,12 +82,15 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                         tmp += '</div>';
                         tmp += '<div class="carousel-inner" role="listbox">';
                     } else { //öffnende Tags und Überschrift für das kleine Carousel
-                        tmp += '<div class="container">';
-                        tmp += '<hr>';
-                        tmp += '<div class="col-sm-12">';
+                        //tmp += '<div class="container">';
+                        //tmp += '<hr>';
+                        //tmp += '<div class="col-sm-12">';
+                    	tmp += '<hr/>'
                         tmp += '<h3>Diese Inhalte könnten Sie auch interessieren:</h3>';
-                        tmp += '</div>';
-                        tmp += '<div class="col-sm-12">';
+                    	tmp += '<br/>'
+                    	tmp += '<br/>'
+                        //tmp += '</div>';
+                        //tmp += '<div class="col-sm-12">';
                         tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">';
                         tmp += '<div class="carousel-inner" role="listbox">';
                     }
@@ -173,6 +187,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
             tmp += '<h4 class="card-title"> ' + e.Title + ' </h4>';
             tmp += '<p class="card-text">' + e.Description + '</p>';
             tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
+            tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="'+e.ContentID+'" data-chapterid="'+e.ChapterID+'">Rate Me</button>';
             tmp += '</div>';
             tmp += '</div>';
             tmp += '</div>';
@@ -201,8 +216,8 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                     tmp += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
                     tmp += '<span class="sr-only">Next</span>';
                     tmp += '</a>';
-                    tmp += '</div>';
-                    tmp += '</div>';
+                    //tmp += '</div>';
+                    //tmp += '</div>';
                     tmp += '</div>';
                     tmp += '<hr>';
                 }
@@ -278,5 +293,9 @@ databaseHandler.generateSidebar = function (callback) {
     });
 };
 
+databaseHandler.rateContent = function(userid, contentid, comment, rating, func){
+	  databaseHandler.sql("INSERT INTO tcontentmanagement (userid, contentid, iscreator, usercoment, rating) VALUES ("+userid+", "+contentid+", 0, '"+comment+"', "+rating+");");
+	  func();
+	}
 
 module.exports = databaseHandler;

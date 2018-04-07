@@ -1,47 +1,86 @@
-﻿ <!--Main layout-->
+﻿    <div class="row">
 
-        
-    <div class="row justify-content-center">
+        <!--Grid column-->
+        <div class="col-lg-5 mb-4">
 
-        <!-- Material form contact -->
-        <form>
-            <p class="h4 text-center mb-4">Hinterlasse uns eine Nachricht:</p>
+            <!--Form with header-->
+            <div class="card">
 
-            <!-- Material input text -->
-            <div class="md-form">
-                <i class="fa fa-user prefix grey-text"></i>
-                <input type="text" id="materialFormContactNameEx" class="form-control">
-                <label for="materialFormContactNameEx">Name</label>
+                <div class="card-body">
+                    <!--Header-->
+                    <div class="form-header">
+                        <h3>
+                            <i class="fa fa-envelope"></i> Hinterlasse uns eine Nachricht:
+                        </h3>
+                    </div>
+
+                    <!--Body-->
+                    <div class="md-form">
+                        <i class="fa fa-user prefix grey-text"></i>
+                        <input type="text" id="form-name" class="form-control">
+                        <label for="form-name">Name</label>
+                    </div>
+
+                    <div class="md-form">
+                        <i class="fa fa-envelope prefix grey-text"></i>
+                        <input type="text" id="form-email" class="form-control">
+                        <label for="form-email">HWR-Mail</label>
+                    </div>
+
+                    <div class="md-form">
+                        <i class="fa fa-pencil prefix grey-text"></i>
+                        <textarea type="text" id="form-text" class="form-control md-textarea" rows="3"></textarea>
+                        <label for="form-text">Nachricht</label>
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-primary">Senden</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <!--Form with header-->
+
+        </div>
+        <!--Grid column-->
+        <!--Grid column-->
+        <div class="col-lg-7">
+
+            <!--Google map-->
+            <div id="map-container" class="rounded z-depth-1-half map-container" style="height: 400px; position: relative; overflow: hidden">
+                <div style="height: 100%; width: 100%; position: absolute; top: 0px; left: 0px">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2428.376460474153!2d13.523578815970492!3d52.50852584483182!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47a8494aa40c4637%3A0x1f9e9d02c3268d6!2sAlt-Friedrichsfelde+60%2C+10315+Berlin!5e0!3m2!1sde!2sde!4v1523023155913" width="100%" height="400" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
             </div>
 
-            <!-- Material input email -->
-            <div class="md-form">
-                <i class="fa fa-envelope prefix grey-text"></i>
-                <input type="email" id="materialFormContactEmailEx" class="form-control">
-                <label for="materialFormContactEmailEx">HWR-Mail</label>
-            </div>
-                
-            <!-- Material input subject -->
-            <div class="md-form">
-                <i class="fa fa-tag prefix grey-text"></i>
-                <input type="text" id="materialFormContactSubjectEx" class="form-control">
-                <label for="materialFormContactSubjectEx">Thema</label>
-            </div>
-                
-            <!-- Material textarea message -->
-            <div class="md-form">
-                <i class="fa fa-pencil prefix grey-text"></i>
-                <textarea type="text" id="materialFormContactMessageEx" class="form-control md-textarea" rows="3"></textarea>
-                <label for="materialFormContactMessageEx">Nachricht</label>
+            <br>
+            <!--Buttons-->
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <a class="btn-floating btn-primary">
+                        <i class="fa fa-map-marker"></i>
+                    </a>
+                    <p>Alt-Friedrichsfelde 60</p>
+                    <p>10315 Berlin</p>
+                </div>
+
+                <div class="col-md-4">
+                    <a class="btn-floating btn-primary">
+                        <i class="fa fa-phone"></i>
+                    </a>
+                    <p>030 30877 - 2534</p>
+                </div>
+
+                <div class="col-md-4">
+                    <a class="btn-floating btn-primary">
+                        <i class="fa fa-envelope"></i>
+                    </a>
+                    <p>elearning@hwr-berlin.de</p>
+                </div>
             </div>
 
-            <div class="text-center mt-4">
-                <button class="btn btn-outline-primary" type="submit">Senden<i class="fa fa-paper-plane-o ml-2"></i></button>
-            </div>
-        </form>
-        <!-- Material form contact -->
-                                                 
+        </div>
+        <!--Grid column-->
+
     </div>
-        
-
-    

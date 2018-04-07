@@ -1,0 +1,41 @@
+﻿
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form class="fileupload" action="/media/uploadFile/{{chapterID}}" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-8">
+                    <div class="md-form">
+                        <div class="file-field">
+                            <div class="btn btn-primary btn-sm float-left">
+                                <span>Datei auswählen</span>
+                                <input id="fileselect" type="file" name="upfile" value="">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" type="text" placeholder="Bitte wählen sie eine Datei aus.">
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="md-form">
+                        <textarea name="comment" type="text" id="text2" class="md-textarea md-textarea-auto form-control" rows="2"></textarea>
+                        <label for="text2">Kommentar:</label>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+
+
+                    <!-- Auto-resizing textarea -->
+
+                </div>
+                <div class="col-4">
+                    <select name="chapter" class="mdb-select colorful-select dropdown-primary" searchable="Search here..">
+                        
+                    </select>
+                    <label>Label example</label>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

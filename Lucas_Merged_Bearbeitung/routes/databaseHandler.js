@@ -11,7 +11,7 @@ databaseHandler.dbConn = mysql.createConnection({
 databaseHandler.pool = mysql.createPool({
     connectionLimit: 100,
     host: 'localhost',
-    user: 'admin',
+    user: 'root',
     password: 'test',
     database: 'muwi',
     debug: false

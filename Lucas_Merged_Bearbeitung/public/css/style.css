@@ -20,3 +20,7 @@ html, body {
     bottom: 0px;
     width: 100%;
 }
+
+.custom-li:hover{
+    transform:scale(1.1);
+}

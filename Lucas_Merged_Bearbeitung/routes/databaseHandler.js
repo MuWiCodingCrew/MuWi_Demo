@@ -275,12 +275,12 @@ databaseHandler.generateSidebar = function (callback) {
             html += '<li>\n';
             html += '<ul class="collapsible collapsible-accordion">\n';
             html += '<li>\n';
-            html += '<a class="collapsible-header waves-effect arrow-r"><i class="fa fa-book"></i>' + e1.bookTitle + '<i class="fa fa-angle-down rotate-icon"></i></a>\n';
+            html += '<a style="height:100%; line-height:1.5em" class="collapsible-header waves-effect arrow-r"><i class="fa fa-book"></i>' + e1.bookTitle + '<i class="fa fa-angle-down rotate-icon"></i></a>\n';
             html += '<div class="collapsible-body">\n';
             html += '<ul class="list-unstyled">\n';
             for (let e2 of e1.chList) {
-                html += '<li>\n';
-                html += '<a class="waves-effect" href="/Kapitel/' + e2.id + '">' + e2.chapterTitle + '</a>\n';
+                html += '<li class="custom-li">\n';
+                html += '<a style="height:100%; line-height:1.5em; background-color:rgba(0,0,0,0); margin-top:5px; margin-right:5px" id="testelement" class="waves-effect" href="/Kapitel/' + e2.id + '">' + e2.chapterTitle + '</a>\n';
                 html += '</li>\n';
             }
             html += '</ul>\n';
@@ -296,6 +296,6 @@ databaseHandler.generateSidebar = function (callback) {
 databaseHandler.rateContent = function(userid, contentid, comment, rating, func){
 	  databaseHandler.sql("INSERT INTO tcontentmanagement (userid, contentid, iscreator, usercoment, rating) VALUES ("+userid+", "+contentid+", 0, '"+comment+"', "+rating+");");
 	  func();
-	}
+}
 
 module.exports = databaseHandler;

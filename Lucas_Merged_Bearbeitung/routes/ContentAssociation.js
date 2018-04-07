@@ -5,7 +5,7 @@ var _ = require('underscore');
 
 //Content erschaffen und Ähnlichkeit ausrechnen
 function Content(id, Description, Title, ContentType, ContentData, tags){
-    this.id = id;
+    this.ContentID = id;
     this.Description = Description;
     this.Title = Title;
     this.ContentType = ContentType;
@@ -108,10 +108,18 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
       var modalarr = [];
       var i = 0;
       var path = "";
-      var route = "";
+      var route = ""; 
+      var tmparr = [];
 
       for (let e of data) {
-        if(e.similarity >= wantedSimilarity){
+          if (e.similarity >= wantedSimilarity) {
+              tmparr.push(e);
+          }
+      }
+
+      data = tmparr;
+
+      for (let e of data) {
           path = e.ContentData.replace('./', '%2E%2F');
           path = path.replace('/', '%2F');
 
@@ -222,7 +230,10 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
               tmp += '</div>'
               tmp += '</div>';
           }
+          console.log(data);
+          console.log(data.length + '  ' + i + '  ' + (i == data.length - 1));
           if (i == data.length - 1) {
+            console.log('if (i == data.length - 1)   '+i)
             tmp += '</div>';
             tmp += '<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">';
             tmp += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
@@ -241,7 +252,7 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
           modalarr.push(modalhtml);
           arr.push(tmp);
           i++;
-        }
+        
       }
       arr = arr.concat(modalarr);
       return callback(arr);

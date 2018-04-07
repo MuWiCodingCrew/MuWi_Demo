@@ -5,7 +5,7 @@ var dbh = require('./databaseHandler');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var bodyParser = require('body-Parser');
-
+var ContentAssociation = require('./ContentAssociation');
 var User = require('../models/user');
 var global = require('../global.js');
 
@@ -61,7 +61,7 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
     dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function(data){
     	userData = data[0];
     });
-    
+
     //anhand der chapterID Buch, Autor und Kapitelname ermitteln
     dbh.sql('SELECT ChapterID, ChapterTitle, BookTitle, Surname, Prename FROM vchapterList WHERE ChapterID=' + id, function (data) {
         book = data[0].BookTitle;
@@ -78,13 +78,19 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
             //kleines und großes Carousel erzeugen
             dbh.generateNetflix(id, true, function (data) {
                 var dataBig = data;
-                dbh.generateNetflix(id, false, function (data) {
+                ContentAssociation.generateNetflixSmall(id, 0.4,function (data) {
                     var dataSmall = data;
                     res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor, userData: userData });
                 });
-            }); 
+            });
         });
     });
+});
+
+router.post("/getLists", function(req, res){
+  var sqlStr = "SELECT listid, listtitle FROM vUserToContentViaList WHERE userid = '"+req.body.userid+"' AND listid NOT IN (SELECT listid FROM tcontentaffiliation WHERE contentid = '"+req.body.contentid+"')";
+  console.log(sqlStr);
+  res.send();//console.log(sqlStr);
 });
 
 router.post("/saveRating",function(req, res){
@@ -109,13 +115,13 @@ router.post('/register', function(req, res){
 		username: username,
 		password: password
 	});
-		
+
 	// Mongo-DB User anlegen
 	User.createUser(newUser, function(err, user){
 		if(err) throw err;
 		console.log(user);
 	});
-	
+
 	// MySQL-DB User anlegen
 	var isStudent;
 	if(radio=='stud'){

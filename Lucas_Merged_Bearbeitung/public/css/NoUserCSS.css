@@ -1,7 +1,8 @@
 body {
-    background-image: url("/00_Medien/TestBG_NoUser.png");
+    background-image: url("/00_Medien/TestBG_NoUser.jpg");
     background-repeat: no-repeat;
-    background-position: center right;
+    background-position: -25px -50px;
+	background-size: calc(100% + 50px);
 }
 
 .greetingsStranger{

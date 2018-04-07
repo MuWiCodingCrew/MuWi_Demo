@@ -82,12 +82,15 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                         tmp += '</div>';
                         tmp += '<div class="carousel-inner" role="listbox">';
                     } else { //öffnende Tags und Überschrift für das kleine Carousel
-                        tmp += '<div class="container">';
-                        tmp += '<hr>';
-                        tmp += '<div class="col-sm-12">';
+                        //tmp += '<div class="container">';
+                        //tmp += '<hr>';
+                        //tmp += '<div class="col-sm-12">';
+                    	tmp += '<hr/>'
                         tmp += '<h3>Diese Inhalte könnten Sie auch interessieren:</h3>';
-                        tmp += '</div>';
-                        tmp += '<div class="col-sm-12">';
+                    	tmp += '<br/>'
+                    	tmp += '<br/>'
+                        //tmp += '</div>';
+                        //tmp += '<div class="col-sm-12">';
                         tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">';
                         tmp += '<div class="carousel-inner" role="listbox">';
                     }
@@ -213,8 +216,8 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
                     tmp += '<span class="carousel-control-next-icon" aria-hidden="true"></span>';
                     tmp += '<span class="sr-only">Next</span>';
                     tmp += '</a>';
-                    tmp += '</div>';
-                    tmp += '</div>';
+                    //tmp += '</div>';
+                    //tmp += '</div>';
                     tmp += '</div>';
                     tmp += '<hr>';
                 }

@@ -1,0 +1,14 @@
+/*Style für Kaptiteltags*/
+.formTagWrapper{
+  display: inline;
+}
+
+.tagLinks {
+    border: none;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    color: white;
+    background-color: #6b89a5;
+    font-size: 14pt;
+    border-radius: 4px;
+}

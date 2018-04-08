@@ -1,5 +1,7 @@
 ﻿<script src="/js/FrontEndInteractionChapter.js" type="text/javascript"></script>
-<link href="/css/RateTooltip.css" rel="stylesheet">
+<link href="/css/Chapter.css" rel="stylesheet">
+<link href="/css/Rating.css" rel="stylesheet">
+<link href="/css/AddContent.css" rel="stylesheet">
 <script type="text/javascript">
 function populateLists(obj){
   var elem = $('#fillWithLists')
@@ -20,11 +22,15 @@ function populateLists(obj){
     success: function(data){
       let rs = JSON.parse(data);
       for(let e of rs.result){
-        elem.html('<span data-content-id="+e.id+">'+e.title+'</span>');
+        elem.html('<span data-content-id="+e.id+" onclick="setOldList(this)">'+e.title+'</span>');
       }
       $('#AddContentToList').modal('show');
     }
   });
+}
+function setOldList(obj){
+  var listName = $(obj).val();
+  $('#modalAddContentInput').val(listName);
 }
 </script>
 <center>
@@ -44,7 +50,9 @@ function populateLists(obj){
 <h5>Verwendete Tags</h5>
 <div id="firstTags" style="margin-bottom: 30px">
     {{#each tagData}}
-        <a class="badge badge-grey" href="http://localhost:3000/{{this.tagTitle}}">{{this.tagTitle}}</a>
+      <form action="/contentlist" method="post" class="formTagWrapper">
+        <button type="submit" name="searchstring" value="{{this.tagTitle}}" class="tagLinks">{{this.tagTitle}}</button>
+      </form>
     {{/each}}
 </div>
 
@@ -60,27 +68,27 @@ function populateLists(obj){
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">Test</button>
 
+<!--Add Content-->
 <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="AddContentToList">
-  <div class="modal-dialog modal-sm">
-    <div class="modal-header">
-      <h5 class="modal-title" id="ModalLabel2">Bewerte den Content!</h5>
+  <div class="modal-dialog modal-dialog-add-content">
+    <div class="modal-header modal-header-add-content">
+      <h5 class="modal-title" id="ModalLabel2">Material hinzufügen</h5>
     </div>
-    <div class="modal-content">
-      <div class="modalTooltipWrapper">
-        <div class="btn-group">
-          <button class="btn btn-secondary btn-sm" type="button">
-            Neue Liste
-          </button>
-          <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <div class="dropdown-menu" id="fillWithLists">
-            <span>Es gibt noch keine Listen</span>
-          </div>
+    <div class="modal-content modal-content-add-content">
+      <div class="btn-group modal-dialog-button-box">
+        <input type="text" class="input modal-input-add-content" type="button" id="modalAddContentInput" placeholder="Neuen Listennamen eingeben"></input>
+        <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split modal-add-content-button-group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <div class="dropdown-menu" id="fillWithLists">
+          <span>Es gibt noch keine Listen</span>
         </div>
+        <button type="button" class="btn btn-sm btn-primary modal-button-add-content modal-add-content-button-group">
+          <span>Hinzufügen</span>
+        </button>
+      </div>
     </div>
   </div>
-</div>
 </div>
 
 

@@ -1,18 +1,18 @@
-﻿﻿var mysql = require('mysql');
+﻿var mysql = require('mysql');
 var databaseHandler = {};
 
 databaseHandler.dbConn = mysql.createConnection({
     host: "localhost",
-    user: "Admin",
-    password: "NodeJS-SQL",
+    user: "root",
+    password: "test",
     database: "muwi"
 });
 
 databaseHandler.pool = mysql.createPool({
     connectionLimit: 100,
     host: 'localhost',
-    user: 'Admin',
-    password: 'NodeJS-SQL',
+    user: 'root',
+    password: 'test',
     database: 'muwi',
     debug: false
 });

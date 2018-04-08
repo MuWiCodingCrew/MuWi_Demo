@@ -2,14 +2,14 @@
 <link href="/css/RateTooltip.css" rel="stylesheet">
 <script type="text/javascript">
 function populateLists(obj){
-  var obj = $('fillWithLists')
-  for(let e of obj.children()){
-    e.remove()
+  var elem = $('#fillWithLists')
+  for(let e of elem.children()){
+    e.remove();
   }
 
   var obj = {
     userid: {{userData.UserID}},
-    contentid: 2, //// TODO:
+    contentid: 2 //// TODO:
   }
 
   $.ajax({
@@ -18,7 +18,11 @@ function populateLists(obj){
     contentType: 'application/json',
     url: 'http://localhost:3000/getLists',
     success: function(data){
-
+      let rs = JSON.parse(data);
+      for(let e of rs.result){
+        elem.html('<span data-content-id="+e.id+">'+e.title+'</span>');
+      }
+      $('#AddContentToList').modal('show');
     }
   });
 }
@@ -46,13 +50,16 @@ function populateLists(obj){
 
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">Test</button>
 
-<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="AddContentToList">
   <div class="modal-dialog modal-sm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="ModalLabel2">Bewerte den Content!</h5>
+    </div>
     <div class="modal-content">
       <div class="modalTooltipWrapper">
         <div class="btn-group">
           <button class="btn btn-secondary btn-sm" type="button">
-            Small split button
+            Neue Liste
           </button>
           <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="sr-only">Toggle Dropdown</span>

@@ -3,16 +3,16 @@ var databaseHandler = {};
 
 databaseHandler.dbConn = mysql.createConnection({
     host: "localhost",
-    user: "root",
-    password: "test",
+    user: "Admin",
+    password: "NodeJS-SQL",
     database: "muwi"
 });
 
 databaseHandler.pool = mysql.createPool({
     connectionLimit: 100,
     host: 'localhost',
-    user: 'admin',
-    password: 'test',
+    user: 'Admin',
+    password: 'NodeJS-SQL',
     database: 'muwi',
     debug: false
 });

@@ -10,7 +10,7 @@ CREATE table MuWi.tList (ListID int NOT NULL AUTO_INCREMENT, ChapterID int NULL,
 CREATE table MuWi.tContentAffiliation (ContentAffiliationID int NOT NULL AUTO_INCREMENT, ListID int NOT NULL, ContentID int NOT NULL, PRIMARY KEY (ContentAffiliationID), FOREIGN KEY (ContentID) REFERENCES tContent(ContentID), FOREIGN KEY (ListID) REFERENCES tList(ListID));
 CREATE table MuWi.tListAffiliation (ListAffiliationID int NOT NULL AUTO_INCREMENT, ListID int NOT NULL, UserID int NOT NULL, isCreator binary, PRIMARY KEY (ListAffiliationID), FOREIGN KEY (ListID) REFERENCES tlist(ListID),FOREIGN KEY (UserID) REFERENCES tuser(UserID));
 CREATE table MuWi.tContentManagement (ContentManagementID int NOT NULL AUTO_INCREMENT, ContentID int NOT NULL, UserID int NOT NULL, IsCreator binary, Rating int, UserComent varchar(255), PRIMARY KEY (ContentManagementID), FOREIGN KEY (ContentID) REFERENCES tcontent(ContentID), FOREIGN KEY (UserID) REFERENCES tuser(UserID));
-CREATE VIEW MuWi.vContent AS (SELECT a.*, d.ChapterID, c.ListID, d.Title AS 'ChapterTitle' FROM (((MuWi.tcontent AS a INNER JOIN MuWi.tContentAffiliation AS b ON a.ContentID = b.ContentID) INNER JOIN MuWi.tlist as c ON b.ListID = c.ListID) INNER JOIN MuWi.tchapter as d ON c.ChapterID = d.ChapterID));
+CREATE VIEW MuWi.vContent AS (SELECT a.*, d.ChapterID, c.ListID, d.Title AS 'ChapterTitle' FROM (((MuWi.tcontent AS a INNER JOIN MuWi.tContentAffiliation AS b ON a.ContentID = b.ContentID) INNER JOIN MuWi.tlist as c ON b.ListID = c.ListID) LEFT JOIN MuWi.tchapter as d ON c.ChapterID = d.ChapterID));
 CREATE VIEW MuWi.vTagList AS (SELECT a.*, c.tagid, c.Title AS 'tagTitle' FROM ((MuWi.vContent as a INNER JOIN MuWi.tcontentclassification as b ON a.ContentID = b.ContentID) INNER JOIN MuWi.ttag as c ON b.TagID = c.tagid));
 CREATE VIEW MuWi.vChapterList AS (Select ch.ChapterID, ch.Title AS 'ChapterTitle', bo.BookID, bo.Title AS 'BookTitle', bo.UserID, us.Surname, us.Prename FROM(MuWi.tchapter AS ch INNER JOIN MuWi.tbook AS bo ON(ch.BookID=bo.BookID) INNER JOIN MuWi.tuser AS us ON(bo.UserID=us.UserID)));
 CREATE VIEW MuWi.vUserToContentViaList AS (SELECT a.*, c.listid, c.ListTitle, e.* FROM MuWi.tuser AS a INNER JOIN MuWi.tlistaffiliation AS b ON a.userid = b.userid INNER JOIN MuWi.tlist AS c ON b.listid = c.listid INNER JOIN MuWi.tcontentaffiliation As d ON d.listid = c.listid INNER JOIN MuWi.tcontent AS e ON e.contentid = d.contentid);
@@ -97,3 +97,43 @@ INSERT INTO MuWi.tcontentclassification (contentid, tagid) VALUES (8, 13);
 INSERT INTO MuWi.tcontentclassification (contentid, tagid) VALUES (8, 14);
 INSERT INTO MuWi.tcontentclassification (contentid, tagid) VALUES (9, 4);
 INSERT INTO MuWi.tcontentclassification (contentid, tagid) VALUES (9, 11);
+
+DELIMITER $$
+CREATE PROCEDURE MuWi.`Insert_List_With_Content`(
+    IN p_listName VARCHAR(255),
+    IN p_userid int,
+    IN p_contentId int
+)
+BEGIN
+	DECLARE v_ListId int;
+
+    START TRANSACTION;
+
+	INSERT INTO MuWi.tlist (listtitle, userid, chapterid) VALUES (p_listName, p_userid, null);
+	SELECT listid INTO v_ListId FROM MuWi.tlist WHERE listtitle = p_listName;
+	INSERT INTO MuWi.tlistaffiliation (ListID, UserID, isCreator) VALUES (v_ListId, p_userid, 1);
+    INSERT INTO MuWi.tcontentaffiliation (ListID, ContentID) VALUES (v_ListId, p_contentId);
+
+    COMMIT WORK;
+
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE PROCEDURE MuWi.`Update_List_With_Content`(
+    IN p_listName VARCHAR(255),
+    IN p_userid int,
+    IN p_contentId int
+)
+BEGIN
+	DECLARE v_ListId int;
+
+    START TRANSACTION;
+
+	SELECT listid INTO v_ListId FROM MuWi.tlist WHERE listtitle = p_listName;
+    INSERT INTO MuWi.tcontentaffiliation (ListID, ContentID) VALUES (v_ListId, p_contentId);
+
+    COMMIT WORK;
+
+END$$
+DELIMITER ;

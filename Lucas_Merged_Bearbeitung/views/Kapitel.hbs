@@ -3,16 +3,18 @@
 <link href="/css/Rating.css" rel="stylesheet">
 <link href="/css/AddContent.css" rel="stylesheet">
 <script type="text/javascript">
-function populateLists(obj){
+function populateLists(clickedButton){
   var elem = $('#fillWithLists')
-  /*for(let e of elem.children()){
-    e.remove();
-  }*/
+  for(let e of elem.children()){
+    $(e).remove();
+  }
 
   var obj = {
     userid: {{userData.UserID}},
-    contentid: 2 //// TODO:
+    contentid: $(clickedButton).attr("data-content-id")
   }
+
+  $('#btnCreateNewList').attr("data-content-id", obj.contentid);
 
   $.ajax({
     type: 'POST',
@@ -21,16 +23,50 @@ function populateLists(obj){
     url: 'http://localhost:3000/getLists',
     success: function(data){
       let rs = JSON.parse(data);
+      let tmp = "";
       for(let e of rs.result){
-        elem.html('<span data-content-id="+e.id+" onclick="setOldList(this)">'+e.title+'</span>');
+        tmp +='<a class="dropdown-item" data-list-id="'+e.id+'" onclick="setOldList(this)">'+e.title+'</a>'
       }
+      elem.html(tmp);
+      $('#modalAddContentInput').val("");
       $('#AddContentToList').modal('show');
     }
   });
 }
+
 function setOldList(obj){
-  var listName = $(obj).val();
+  var listName = $(obj).text();
   $('#modalAddContentInput').val(listName);
+}
+
+function addToList(){
+  var oldList = false;
+  var listName = $('#modalAddContentInput').val();
+  var userId = {{userData.UserID}};
+  var contentId = $('#btnCreateNewList').attr("data-content-id");
+
+  for(let e of $('#fillWithLists').children()){
+    if($(e).text() == listName){
+      oldList = true;
+    }
+  }
+
+  var obj = {};
+  obj.oldList = oldList;
+  obj.listName = listName;
+  obj.userId = userId;
+  obj.contentId = contentId;
+
+  $.ajax({
+    type: 'POST',
+    data: JSON.stringify(obj),
+    contentType: 'application/json',
+    url: 'http://localhost:3000/addContentToList',
+    success: function(data){
+      toastr["info"]("Das Objekt wurde der Liste '"+listName+"' hinzugefügt.","Erfolg");
+      $('#AddContentToList').modal('hide');
+    }
+  });
 }
 </script>
 <center>
@@ -66,20 +102,21 @@ function setOldList(obj){
 {{{this}}}
 {{/each}}
 
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">Test</button>
-
 <!--Add Content-->
 <div class="modal fade" id="AddContentToList" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header modal-header-add-content">
                 <h5 class="modal-title" id="ModalLabel2">Material hinzufügen</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body modal-content-add-content">
                 <div class="row d-inline-flex modal-dialog-button-box">
                     <div class="md-form mb-0 ml-3">
-                        <input type="text" class="input p-1 modal-input-add-content" id="modalAddContentInput" style="width: 330px">
-                        <label for="modalAddContentInput">Neuen Listennamen eingeben</label>
+                        <input type="text" class="input p-1 modal-input-add-content" id="modalAddContentInput" style="width: 330px" placeholder="Neuen Listennamen eingeben">
+                        <!--<label for="modalAddContentInput">Neuen Listennamen eingeben</label>-->
                     </div>
                         <button type="button" class="btn btn-small btn-primary ml-0 p-2 dropdown-toggle modal-add-content-button-group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="sr-only">Toggle Dropdown</span>
@@ -87,7 +124,7 @@ function setOldList(obj){
                         <div class="dropdown-menu" id="fillWithLists">
                             <span>Es gibt noch keine Listen</span>
                         </div>
-                        <button type="button" class="btn btn-small btn-primary ml-1 p-2 modal-button-add-content modal-add-content-button-group">
+                        <button type="button" id="btnCreateNewList" data-content-id="" class="btn btn-small btn-primary ml-1 p-2 modal-button-add-content modal-add-content-button-group" onclick="addToList()">
                             <span>Hinzufügen</span>
                         </button>
                 </div>

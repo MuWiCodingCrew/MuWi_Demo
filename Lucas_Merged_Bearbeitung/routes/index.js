@@ -87,7 +87,22 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
                 var dataBig = data;
                 ContentAssociation.generateNetflixSmall(id, 0.4,function (data) {
                     var dataSmall = data;
-                    res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor, userData: userData });
+                    //Kapiteltags ziehen
+                    dbh.sql("SELECT DISTINCT tagTitle FROM vTagList WHERE chapterid = "+id+";",function(data) {
+                        var tagData = data;
+                        res.render('Kapitel', {
+                            dataBig: dataBig,
+                            dataSmall: dataSmall,
+                            sidebar: sidebar,
+                            author: author,
+                            book: book,
+                            chapterTitle: chapterTitle,
+                            chapterID: chapterID,
+                            isAuthor: isAuthor,
+                            userData: userData,
+                            tagData: tagData
+                        });
+                    });
                 });
             });
         });

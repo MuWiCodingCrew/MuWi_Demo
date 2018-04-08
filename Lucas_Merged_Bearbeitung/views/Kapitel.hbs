@@ -1,5 +1,5 @@
 ﻿<script src="/js/FrontEndInteractionChapter.js" type="text/javascript"></script>
-<link href="/css/RateTooltip.css" rel="stylesheet">
+<link href="/css/Chapter.css" rel="stylesheet">
 <script type="text/javascript">
 function populateLists(obj){
   var elem = $('#fillWithLists')
@@ -37,6 +37,18 @@ function populateLists(obj){
     <h2>{{chapterTitle}}</h2>
     <hr />
 </center>
+
+<!--Kaptiteltags anzeigen-->
+<div id="myDiv">
+</div>
+<h5>Verwendete Tags</h5>
+<div id="firstTags" style="margin-bottom: 30px">
+    {{#each tagData}}
+      <form action="/contentlist" method="post" class="formTagWrapper">
+        <button type="submit" name="searchstring" value="{{this.tagTitle}}" class="tagLinks">{{this.tagTitle}}</button>
+      </form>
+    {{/each}}
+</div>
 
 <!--Carousel für die Kapitelinhalte-->
 {{#each dataBig}}

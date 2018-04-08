@@ -233,7 +233,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
 
 databaseHandler.generateContentList = function (searchstring, callback) {
 
-    databaseHandler.sql("SELECT distinct ContentID, Description, Title, ContentType, ContentData FROM vtaglist WHERE Description LIKE '" + searchstring + "' OR Title LIKE '" + searchstring + "' OR tagTitle LIKE '" + searchstring + "' OR ContentType LIKE '" + searchstring + "';", function (data) {
+    databaseHandler.sql("SELECT distinct ContentID, Description, Title, ContentType, ContentData FROM vtaglist WHERE Description LIKE '%" + searchstring + "%' OR Title LIKE '%" + searchstring + "%' OR tagTitle LIKE '%" + searchstring + "%' OR ContentType LIKE '%" + searchstring + "%';", function (data) {
         var tmp = "";
         var arr = [];
         var modalhtml = "";

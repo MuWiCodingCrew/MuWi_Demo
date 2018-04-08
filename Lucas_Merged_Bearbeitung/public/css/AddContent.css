@@ -1,0 +1,33 @@
+.modal-dialog-add-content{
+  background-color: white;
+  border-radius: 10px;
+}
+
+.modal-header-add-content{
+
+}
+
+.modal-content-add-content{
+    display:block;
+}
+
+.modal-header-add-content{
+  background-color: white;
+  border-radius: 10px;
+}
+
+.modal-dialog-button-box{
+  margin:15px;
+}
+
+.modal-add-content-button-group{
+  margin-right: 10px;
+}
+
+.modal-input-add-content{
+  width: 330px
+}
+
+.modal-button-add-content{
+  width: 154px;
+}

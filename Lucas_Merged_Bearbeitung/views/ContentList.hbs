@@ -1,5 +1,38 @@
+<script src="/js/FrontEndInteractionContentList.js" type="text/javascript"></script>
+<link href="/css/Rating.css" rel="stylesheet">
+
 <div style="margin-bottom:55px;">
   {{#each clist}}
     {{{this}}}
   {{/each}}
+</div>
+
+<!--Modal Rate Content-->
+<div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="ModalLabel">Bewerte den Content!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="rateModalWrapper" data-contentID="">
+        <div class="rating">
+          <span onclick="toggleStars(this)" data-star-value="5">☆</span>
+          <span onclick="toggleStars(this)" data-star-value="4">☆</span>
+          <span onclick="toggleStars(this)" data-star-value="3">☆</span>
+          <span onclick="toggleStars(this)" data-star-value="2">☆</span>
+          <span onclick="toggleStars(this)" data-star-value="1">☆</span>
+        </div>
+        <h5 class="rate_subheading">Sag deine Meinung!</h5>
+        <div>
+          <textarea id="rate_CommentBox"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" onclick="sendRating()" class="btn btn-primary">Rate</button>
+      </div>
+    </div>
+  </div>
 </div>

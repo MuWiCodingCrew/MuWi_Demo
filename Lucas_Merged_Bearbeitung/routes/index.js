@@ -5,7 +5,7 @@ var dbh = require('./databaseHandler');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var bodyParser = require('body-Parser');
-
+var ContentAssociation = require('./ContentAssociation');
 var User = require('../models/user');
 var global = require('../global.js');
 
@@ -17,6 +17,13 @@ dbh.generateSidebar(function (html) {
 /* GET home page. */
 router.get('/', ensureAuthenticated, function (req, res) {
     res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar });
+});
+
+router.post('/contentlist', ensureAuthenticated, function (req, res) {
+    dbh.generateContentList(req.body.searchstring, function (arr) {
+        var clist = arr;
+        res.render('ContentList', { sidebar: sidebar, clist: clist });
+    });
 });
 
 router.get('/indexNoUser', function (req, res) {
@@ -61,7 +68,7 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
     dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function(data){
     	userData = data[0];
     });
-    
+
     //anhand der chapterID Buch, Autor und Kapitelname ermitteln
     dbh.sql('SELECT ChapterID, ChapterTitle, BookTitle, Surname, Prename FROM vchapterList WHERE ChapterID=' + id, function (data) {
         book = data[0].BookTitle;
@@ -78,13 +85,46 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
             //kleines und großes Carousel erzeugen
             dbh.generateNetflix(id, true, function (data) {
                 var dataBig = data;
-                dbh.generateNetflix(id, false, function (data) {
+                ContentAssociation.generateNetflixSmall(id, 0.4,function (data) {
                     var dataSmall = data;
-                    res.render('Kapitel', { dataBig: dataBig, dataSmall: dataSmall, sidebar: sidebar, author: author, book: book, chapterTitle: chapterTitle, chapterID: chapterID, isAuthor: isAuthor, userData: userData });
+                    //Kapiteltags ziehen
+                    dbh.sql("SELECT DISTINCT tagTitle FROM vTagList WHERE chapterid = "+id+";",function(data) {
+                        var tagData = data;
+                        res.render('Kapitel', {
+                            dataBig: dataBig,
+                            dataSmall: dataSmall,
+                            sidebar: sidebar,
+                            author: author,
+                            book: book,
+                            chapterTitle: chapterTitle,
+                            chapterID: chapterID,
+                            isAuthor: isAuthor,
+                            userData: userData,
+                            tagData: tagData
+                        });
+                    });
                 });
-            }); 
+            });
         });
     });
+});
+
+router.post("/getLists", function(req, res){
+  var sqlStr = "SELECT DISTINCT listid, listtitle FROM vUserToContentViaList WHERE userid = '"+req.body.userid+"' AND listid NOT IN (SELECT listid FROM tcontentaffiliation WHERE contentid = '"+req.body.contentid+"')";
+  dbh.sql(sqlStr,function(data){
+    let obj = {
+      success: true,
+      result: []
+    };
+    if(data.length == 0){
+      obj.success = false;
+    } else {
+      for(let e of data){
+        obj.result.push({id:e.listid, title:e.ListTitle});
+      }
+    }
+    res.send(JSON.stringify(obj));
+  });
 });
 
 router.post("/saveRating",function(req, res){
@@ -109,13 +149,13 @@ router.post('/register', function(req, res){
 		username: username,
 		password: password
 	});
-		
+
 	// Mongo-DB User anlegen
 	User.createUser(newUser, function(err, user){
 		if(err) throw err;
 		console.log(user);
 	});
-	
+
 	// MySQL-DB User anlegen
 	var isStudent;
 	if(radio=='stud'){

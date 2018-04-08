@@ -20,3 +20,24 @@ html, body {
     bottom: 0px;
     width: 100%;
 }
+
+.custom-li:hover{
+    transform:scale(1.1);
+}
+
+/*Style für Kaptiteltags*/
+a.badge.badge-grey{
+    margin-left: 5px;
+    margin-top: 5px;
+    font-size: 14pt;
+    font-weight: normal;
+    background-color: #6b89a5;
+}
+
+span.badge.badge-grey{
+    margin-left: 5px;
+    margin-top: 5px;
+    font-size: 14pt;
+    font-weight: normal;
+    background-color: #6b89a5;
+}

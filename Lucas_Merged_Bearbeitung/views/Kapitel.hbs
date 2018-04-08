@@ -1,6 +1,32 @@
 ﻿<script src="/js/FrontEndInteractionChapter.js" type="text/javascript"></script>
 <link href="/css/RateTooltip.css" rel="stylesheet">
+<script type="text/javascript">
+function populateLists(obj){
+  var elem = $('#fillWithLists')
+  for(let e of elem.children()){
+    e.remove();
+  }
 
+  var obj = {
+    userid: {{userData.UserID}},
+    contentid: 2 //// TODO:
+  }
+
+  $.ajax({
+    type: 'POST',
+    data: JSON.stringify(obj),
+    contentType: 'application/json',
+    url: 'http://localhost:3000/getLists',
+    success: function(data){
+      let rs = JSON.parse(data);
+      for(let e of rs.result){
+        elem.html('<span data-content-id="+e.id+">'+e.title+'</span>');
+      }
+      $('#AddContentToList').modal('show');
+    }
+  });
+}
+</script>
 <center>
     {{#if isAuthor}}
     <button type="button" onclick="document.location.href = '/upload/{{chapterID}}'" style="float:right" class="btn btn-primary btn-floating" data-toggle="tooltip" data-placement="top" title="Inhalte zu diesem Kapitel hinzufügen"><i class="fa fa-pencil" aria-hidden="true"></i></button>
@@ -12,6 +38,16 @@
     <hr />
 </center>
 
+<!--Kaptiteltags anzeigen-->
+<div id="myDiv">
+</div>
+<h5>Verwendete Tags</h5>
+<div id="firstTags" style="margin-bottom: 30px">
+    {{#each tagData}}
+        <a class="badge badge-grey" href="http://localhost:3000/{{this.tagTitle}}">{{this.tagTitle}}</a>
+    {{/each}}
+</div>
+
 <!--Carousel für die Kapitelinhalte-->
 {{#each dataBig}}
 {{{this}}}
@@ -22,6 +58,33 @@
 {{{this}}}
 {{/each}}
 
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">Test</button>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="AddContentToList">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-header">
+      <h5 class="modal-title" id="ModalLabel2">Bewerte den Content!</h5>
+    </div>
+    <div class="modal-content">
+      <div class="modalTooltipWrapper">
+        <div class="btn-group">
+          <button class="btn btn-secondary btn-sm" type="button">
+            Neue Liste
+          </button>
+          <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <div class="dropdown-menu" id="fillWithLists">
+            <span>Es gibt noch keine Listen</span>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!--Modal Rate Content-->
 <div class="modal fade" id="rateModal" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

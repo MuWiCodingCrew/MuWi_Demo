@@ -72,6 +72,7 @@
     <Compile Include="public\js\modules %28optional%29\waves.js" />
     <Compile Include="public\js\modules %28optional%29\wow.js" />
     <Compile Include="public\js\popper.min.js" />
+    <Compile Include="routes\ContentAssociation.js" />
     <Compile Include="routes\databaseHandler.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\media.js" />
@@ -226,6 +227,7 @@
     <Content Include="views\ModalTest.hbs" />
     <Content Include="views\Kapitel.hbs" />
     <Content Include="views\error.hbs" />
+    <Content Include="views\ContentList.hbs" />
     <Content Include="views\newList.hbs" />
     <Content Include="views\index.hbs" />
     <Content Include="views\Kontakt.hbs" />

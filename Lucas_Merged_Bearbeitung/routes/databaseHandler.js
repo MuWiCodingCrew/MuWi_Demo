@@ -231,6 +231,119 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
     });
 };
 
+databaseHandler.generateContentList = function (searchstring, callback) {
+
+    databaseHandler.sql("SELECT distinct ContentID, Description, Title, ContentType, ContentData FROM vtaglist WHERE Description LIKE '" + searchstring + "' OR Title LIKE '" + searchstring + "' OR tagTitle LIKE '" + searchstring + "' OR ContentType LIKE '" + searchstring + "';", function (data) {
+        var tmp = "";
+        var arr = [];
+        var modalhtml = "";
+        var modalarr = [];
+        var i = 0;
+        var path = "";
+        var route = "";
+
+        for (let e of data) {
+
+            path = e.ContentData.replace('./', '%2E%2F');
+            path = path.replace('/', '%2F');
+
+            tmp = "";
+
+            if (i % 3 == 0) {
+                tmp += '<div class="col-md-12">\n';
+                tmp += '<div class="row">\n';
+            }
+
+            tmp += '<div class="col-md-4">';
+            tmp += '<div class="card mb-2">';
+
+            switch (e.ContentType.toLowerCase()) {
+                case 'png':
+                case 'jpg':
+                    route = "../media/image/";
+                    tmp += '<img style="cursor:pointer" class="img-fluid" src="' + route + path + '" alt="' + e.Title + '" data-toggle="modal" data-target="#' + e.ContentID + 'Modal"/>\n';
+
+                    modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                    modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                    modalhtml += '<div class="modal-content">\n';
+                    modalhtml += '<div class="modal-header">\n';
+                    modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                    modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-body">\n';
+                    modalhtml += '<img class="img-fluid" src="' + route + path + '" alt="' + e.Title + '"/>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-footer">\n';
+                    modalhtml += '<h6>' + e.Description + '</h6>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    break;
+                case 'mp4':
+                    route = "../media/stream/";
+                    tmp += '<video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullscreen()">\n';
+                    tmp += '<source src="' + route + path + '" type="video/mp4">\n';
+                    tmp += '</video>\n';
+                    break;
+                case 'mp3':
+                    route = "../media/stream/";
+                    tmp += '<img class="img-fluid" src="../media/image/%2E%2Fupload%2F3_MP3ICON.png" />\n';
+                    tmp += '<audio style="width:auto" class="img-audio" controls>\n';
+                    tmp += '<source src="' + route + path + '" type="audio/mp3">\n';
+                    tmp += '</audio>';
+                    break;
+                case 'pdf':
+                    route = "../media/document/";
+                    tmp += '<div style="height:300px" width="auto">\n';
+                    tmp += '<iframe style="height:100%;width:100%" src="' + route + path + '"></iframe>\n';
+                    tmp += '<button style="position:relative;float:left;bottom:60%;opacity:0.8;width:90%" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#' + e.ContentID + 'Modal">Open Fullscreen</button>\n';
+                    tmp += '</div>\n';
+
+                    modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                    modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                    modalhtml += '<div class="modal-content">\n';
+                    modalhtml += '<div class="modal-header">\n';
+                    modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                    modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-body">\n';
+                    modalhtml += '<iframe width="1000" height="700" src="' + route + path + '#zoom=75"></iframe>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '<div class="modal-footer">\n';
+                    modalhtml += '<h6>' + e.Description + '</h6>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    modalhtml += '</div>\n';
+                    break;
+                default:
+            }
+
+            tmp += '<div class="card-body">';
+            tmp += '<h4 class="card-title"> ' + e.Title + ' </h4>';
+            tmp += '<p class="card-text">' + e.Description + '</p>';
+            tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
+            tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="' + e.ContentID + '" data-chapterid="' + e.ChapterID + '">Rate Me</button>';
+            tmp += '</div>';
+            tmp += '</div>';
+            tmp += '</div>';
+
+            if (i % 3 == 2) {
+                tmp += '</div>\n';
+                tmp += '</div>\n';
+                tmp += '<hr/>';
+            }
+
+            modalarr.push(modalhtml);
+            arr.push(tmp);
+            i++;
+        }
+        arr = arr.concat(modalarr);
+        return callback(arr);
+    });
+};
+
 databaseHandler.generateSidebar = function (callback) {
     databaseHandler.sql("SELECT * FROM vchapterlist ORDER BY BookID, ChapterID", function (data) {
         var tmp = -1;

@@ -230,8 +230,8 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
               tmp += '</div>'
               tmp += '</div>';
           }
-          console.log(data);
-          console.log(data.length + '  ' + i + '  ' + (i == data.length - 1));
+          //console.log(data);
+          //console.log(data.length + '  ' + i + '  ' + (i == data.length - 1));
           if (i == data.length - 1) {
             console.log('if (i == data.length - 1)   '+i)
             tmp += '</div>';

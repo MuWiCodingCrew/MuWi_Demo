@@ -109,6 +109,17 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
     });
 });
 
+router.post('/addContentToList', function(req, res){
+  var oldList = (!req.body.oldList);
+  var listName = req.body.listName;
+  var userId = req.body.userId;
+  var contentId = req.body.contentId;
+
+  dbh.createNewListWithContent(oldList, listName, userId, contentId, function(data){
+      res.send(JSON.stringify({success: true}));
+  });
+});
+
 router.post("/getLists", function(req, res){
   var sqlStr = "SELECT DISTINCT listid, listtitle FROM vUserToContentViaList WHERE userid = '"+req.body.userid+"' AND listid NOT IN (SELECT listid FROM tcontentaffiliation WHERE contentid = '"+req.body.contentid+"')";
   dbh.sql(sqlStr,function(data){

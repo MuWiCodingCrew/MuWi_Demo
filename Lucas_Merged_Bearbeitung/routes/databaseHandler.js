@@ -28,7 +28,7 @@ databaseHandler.sql = function (sqlString, callback) {
                 }
             });
         } else {
-            databaseHandler.dbConn.query(sqlString, function (err, result) {
+            con.query(sqlString, function (err, result) {
                 if (err) {
                     throw err;
                 }
@@ -188,6 +188,7 @@ databaseHandler.generateNetflix = function (id, isBig, callback) {
             tmp += '<p class="card-text">' + e.Description + '</p>';
             tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
             tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="'+e.ContentID+'" data-chapterid="'+e.ChapterID+'">Rate Me</button>';
+            tmp += '<button type="button" class="btn btn-primary btn-xs" data-content-id="' + e.ContentID + '" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">+</button>';
             tmp += '</div>';
             tmp += '</div>';
             tmp += '</div>';
@@ -409,6 +410,21 @@ databaseHandler.generateSidebar = function (callback) {
 databaseHandler.rateContent = function(userid, contentid, comment, rating, func){
 	  databaseHandler.sql("INSERT INTO tcontentmanagement (userid, contentid, iscreator, usercoment, rating) VALUES ("+userid+", "+contentid+", 0, '"+comment+"', "+rating+");");
 	  func();
+}
+
+databaseHandler.createNewListWithContent = function(createNecessary, listName, userId, contentId, func){
+  console.log("ping1");
+  if(createNecessary){
+    console.log("ping2");
+    databaseHandler.sql("CALL Insert_List_With_Content('"+listName+"', "+userId+", "+contentId+");",function(data){
+      func(data);
+    });
+  } else {
+    console.log("ping3");
+    databaseHandler.sql("CALL Update_List_With_Content('"+listName+"', "+userId+", "+contentId+");",function(data){
+      func(data);
+    });
+  }
 }
 
 module.exports = databaseHandler;

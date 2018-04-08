@@ -1,4 +1,4 @@
-.modal-dialog-add-content{
+/*.modal-dialog-add-content{
   background-color: white;
   border-radius: 10px;
 }
@@ -31,3 +31,9 @@
 .modal-button-add-content{
   width: 154px;
 }
+
+.listItemOldLists{
+  display: block
+  margin:0px 5px;
+}
+*/

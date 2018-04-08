@@ -22,11 +22,15 @@ function populateLists(obj){
     success: function(data){
       let rs = JSON.parse(data);
       for(let e of rs.result){
-        elem.html('<span data-content-id="+e.id+">'+e.title+'</span>');
+        elem.html('<span data-content-id="+e.id+" onclick="setOldList(this)">'+e.title+'</span>');
       }
       $('#AddContentToList').modal('show');
     }
   });
+}
+function setOldList(obj){
+  var listName = $(obj).val();
+  $('#modalAddContentInput').val(listName);
 }
 </script>
 <center>
@@ -72,7 +76,7 @@ function populateLists(obj){
     </div>
     <div class="modal-content modal-content-add-content">
       <div class="btn-group modal-dialog-button-box">
-        <input type="text" class="input modal-input-add-content" type="button" placeholder="Neuen Listennamen eingeben"></input>
+        <input type="text" class="input modal-input-add-content" type="button" id="modalAddContentInput" placeholder="Neuen Listennamen eingeben"></input>
         <button type="button" class="btn btn-sm btn-primary dropdown-toggle dropdown-toggle-split modal-add-content-button-group" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           <span class="sr-only">Toggle Dropdown</span>
         </button>

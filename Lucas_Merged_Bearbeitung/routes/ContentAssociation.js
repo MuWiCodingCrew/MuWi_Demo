@@ -1,6 +1,6 @@
 // Das Ranking basiert auf der Annahme, dass der am besten passendste Inhalt nur Tags enthält, die alle zur durchsuchten Liste gehören + die meisten Tags enthält + die Tags des Inhalts häufig in der Liste vorkommen
 var databaseHandler = require('./databaseHandler');
-//var fpgrowth = require("/Users/maria/node_modules/node-fpgrowth/dist/fpgrowth");
+var fpgrowth = require("node-fpgrowth/dist/fpgrowth");
 var _ = require('underscore');
 
 //Content erschaffen und Ähnlichkeit ausrechnen
@@ -49,7 +49,7 @@ ContentAssociation.CalculateSimilarity = function (chapterId, func) {
                 if (data[i].ContentID === tmpId) {
                     tmpCont.addTag(data[i].tagTitle);
                 } else {
-                    if (typeof tmpCont == "undefined") {
+                    if (typeof tmpCont === "undefined") {
                         tmpId = data[i].ContentID;
                         tmpCont = new Content(tmpId, data[i].Description, data[i].Title, data[i].ContentType, data[i].ContentData, [data[i].tagTitle]);
                     } else {
@@ -125,15 +125,15 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
 
           tmp = "";
 
-          if (i % numberOfItems == 0) {//html-code, der pro neuem Slide oder ganz am Anfang benötigt wird
-              if (i == 0) {
+          if (i % numberOfItems === 0) {//html-code, der pro neuem Slide oder ganz am Anfang benötigt wird
+              if (i === 0) {
                       //tmp += '<div class="container">';
                       //tmp += '<hr>';
                       //tmp += '<div class="col-sm-12">';
-                    tmp += '<hr/>'
+                    tmp += '<hr/>';
                     tmp += '<h3>Diese Inhalte könnten Sie auch interessieren:</h3>';
-                    tmp += '<br/>'
-                    tmp += '<br/>'
+                    tmp += '<br/>';
+                    tmp += '<br/>';
                       //tmp += '</div>';
                       //tmp += '<div class="col-sm-12">';
                     tmp += '<div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="false">';
@@ -223,17 +223,16 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
           tmp += '</div>';
           tmp += '</div>';
           tmp += '</div>';
-          if (i % numberOfItems == numberOfItems - 1) {
+          if (i % numberOfItems === numberOfItems - 1) {
               tmp += '</div>'
               tmp += '</div>';
-          } else if (i == data.length-1) {
+          } else if (i === data.length-1) {
               tmp += '</div>'
               tmp += '</div>';
           }
           //console.log(data);
           //console.log(data.length + '  ' + i + '  ' + (i == data.length - 1));
-          if (i == data.length - 1) {
-            console.log('if (i == data.length - 1)   '+i)
+          if (i === data.length - 1) {
             tmp += '</div>';
             tmp += '<a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">';
             tmp += '<span class="carousel-control-prev-icon" aria-hidden="true"></span>';
@@ -257,10 +256,10 @@ ContentAssociation.generateNetflixSmall = function(id, wantedSimilarity, callbac
       arr = arr.concat(modalarr);
       return callback(arr);
   });
-}
-/*
+};
+
 //Frequent Itemsets finden mithilfe des FPGrowth Algorithmus
-var transactions = [
+/*var transactions = [
     [1, 2, 3, 4],
     [2, 3, 5],
     [1, 2, 3, 5],
@@ -268,7 +267,167 @@ var transactions = [
     [1, 2, 3, 5],
     [1, 2, 3],
     [1, 2, 3]
-];
+];*/
+
+function prepareFPG(id, func){
+    var transactions = [];
+    databaseHandler.sql("SELECT ContentID, ListID FROM vcontent ORDER BY ListID ASC", function (data) {
+        var tmpId;
+        var tmpT = [];
+        for (let e of data){
+            if (e.ListID === tmpId){
+                tmpT.push(e.ContentID)
+            }
+            else{
+                if(typeof tmpId !== "undefined"){
+                    transactions.push(tmpT);
+                }
+                tmpId = e.ListID;
+                tmpT = [e.ContentID];
+            }
+        }
+
+        transactions.push(tmpT);
+        executeFPG(transactions,id,function (data) {
+            func(data);
+        });
+    })
+};
+
+function getFPGSuggestions (id, func) {
+    prepareFPG(id, function(data){
+        if(data.length !== 0){
+            var idStr = "(";
+            for(let e of data) {
+                idStr += e + ",";
+            }
+            idStr = idStr.substring(0,idStr.length-1);
+            idStr += ")";
+
+            databaseHandler.sql("SELECT * FROM tcontent WHERE contentid IN " + idStr + ";", function(data){
+                func(data)
+            });
+        } else{
+            func([]);
+        }
+    })
+}
+
+ContentAssociation.generateSuggestionCard = function(id,func){
+    getFPGSuggestions(id, function (data) {
+        var tmp = "";
+        var arr = [];
+        var modalhtml = "";
+        var modalarr = [];
+        var i = 0;
+        var path = "";
+        var route = "";
+
+        if(data.length !== 0) {
+            for (let e of data) {
+
+                path = e.ContentData.replace('./', '%2E%2F');
+                path = path.replace('/', '%2F');
+
+                tmp = "";
+
+                if (i % 3 == 0) {
+                    tmp += '<div class="col-md-12">\n';
+                    tmp += '<div class="row">\n';
+                }
+
+                tmp += '<div class="col-md-4">';
+                tmp += '<div class="card mb-2">';
+
+                switch (e.ContentType.toLowerCase()) {
+                    case 'png':
+                    case 'jpg':
+                        route = "../media/image/";
+                        tmp += '<img style="cursor:pointer" class="img-fluid" src="' + route + path + '" alt="' + e.Title + '" data-toggle="modal" data-target="#' + e.ContentID + 'Modal"/>\n';
+
+                        modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                        modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                        modalhtml += '<div class="modal-content">\n';
+                        modalhtml += '<div class="modal-header">\n';
+                        modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                        modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '<div class="modal-body">\n';
+                        modalhtml += '<img class="img-fluid" src="' + route + path + '" alt="' + e.Title + '"/>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '<div class="modal-footer">\n';
+                        modalhtml += '<h6>' + e.Description + '</h6>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        break;
+                    case 'mp4':
+                        route = "../media/stream/";
+                        tmp += '<video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullscreen()">\n';
+                        tmp += '<source src="' + route + path + '" type="video/mp4">\n';
+                        tmp += '</video>\n';
+                        break;
+                    case 'mp3':
+                        route = "../media/stream/";
+                        tmp += '<img class="img-fluid" src="../media/image/%2E%2Fupload%2F3_MP3ICON.png" />\n';
+                        tmp += '<audio style="width:auto" class="img-audio" controls>\n';
+                        tmp += '<source src="' + route + path + '" type="audio/mp3">\n';
+                        tmp += '</audio>';
+                        break;
+                    case 'pdf':
+                        route = "../media/document/";
+                        tmp += '<div style="height:300px" width="auto">\n';
+                        tmp += '<iframe style="height:100%;width:100%" src="' + route + path + '"></iframe>\n';
+                        tmp += '<button style="position:relative;float:left;bottom:60%;opacity:0.8;width:90%" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#' + e.ContentID + 'Modal">Open Fullscreen</button>\n';
+                        tmp += '</div>\n';
+
+                        modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+                        modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+                        modalhtml += '<div class="modal-content">\n';
+                        modalhtml += '<div class="modal-header">\n';
+                        modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+                        modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '<div class="modal-body">\n';
+                        modalhtml += '<iframe width="1000" height="700" src="' + route + path + '#zoom=75"></iframe>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '<div class="modal-footer">\n';
+                        modalhtml += '<h6>' + e.Description + '</h6>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        modalhtml += '</div>\n';
+                        break;
+                    default:
+                }
+
+                tmp += '<div class="card-body">';
+                tmp += '<h4 class="card-title"> ' + e.Title + ' </h4>';
+                tmp += '<p class="card-text">' + e.Description + '</p>';
+                tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
+                tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="' + e.ContentID + '" data-chapterid="' + e.ChapterID + '">Rate Me</button>';
+                tmp += '</div>';
+                tmp += '</div>';
+                tmp += '</div>';
+
+                if (i % 3 == 2) {
+                    tmp += '</div>\n';
+                    tmp += '</div>\n';
+                    tmp += '<hr/>';
+                }
+
+                modalarr.push(modalhtml);
+                arr.push(tmp);
+                i++;
+            }
+            arr = arr.concat(modalarr);
+            func(arr);
+        } else {
+            func([])
+        }
+    });
+};
 
 // Execute FPGrowth with a minimum support of 40%.
 function executeFPG(data, checkvalue, func){
@@ -277,8 +436,10 @@ function executeFPG(data, checkvalue, func){
     var tmp = [];
 
     fpgHandler.exec(data).then(function (result) {
+        var chk = parseInt(checkvalue);
+
         for(let e of result.itemsets){
-            if(e.items.includes(checkvalue)){
+            if(e.items.includes(chk)){
                 arr.push(e.items);
             }
         }
@@ -289,8 +450,8 @@ function executeFPG(data, checkvalue, func){
             }
         }
 
-        func(_.difference(tmp, [checkvalue]));
+        func(_.difference(tmp, [chk]));
     });
 }
-*/
+
 module.exports = ContentAssociation;

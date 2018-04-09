@@ -24,3 +24,11 @@ html, body {
 .custom-li:hover{
     transform:scale(1.1);
 }
+
+.alert-invisible {
+    display: none;
+}
+
+.alert-invisible2 {
+    display: none;
+}

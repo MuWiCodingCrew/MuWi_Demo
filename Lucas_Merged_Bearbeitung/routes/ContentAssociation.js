@@ -1,6 +1,6 @@
 // Das Ranking basiert auf der Annahme, dass der am besten passendste Inhalt nur Tags enthält, die alle zur durchsuchten Liste gehören + die meisten Tags enthält + die Tags des Inhalts häufig in der Liste vorkommen
 var databaseHandler = require('./databaseHandler');
-var fpgrowth = require("/Users/maria/node_modules/node-fpgrowth/dist/fpgrowth");
+var fpgrowth = require("node-fpgrowth/dist/fpgrowth");
 var _ = require('underscore');
 
 //Content erschaffen und Ähnlichkeit ausrechnen

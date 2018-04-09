@@ -16,7 +16,15 @@ dbh.generateSidebar(function (html) {
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, function (req, res) {
-    res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar });
+    var userData;
+    var listData;
+    dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function (data) {
+        userData = data[0];
+        dbh.sql("SELECT * FROM tlist WHERE userid = '" + userData.UserID + "' AND listtitle IS NOT NULL;", function (data2) {
+            listData = data2;
+            res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar, userData: userData, listData: listData });
+        });
+    });
 });
 
 router.post('/contentlist', ensureAuthenticated, function (req, res) {
@@ -152,6 +160,25 @@ router.post("/saveRating",function(req, res){
 	    }
 	    res.send(JSON.stringify(myObj));
 	  });
+});
+
+router.post('/newList', function (req, res) {
+    var listTitle = req.body.listTitle;
+    var userID = req.body.userid;
+    var success;
+
+    // Check, ob der User bereits eine Liste mit dieser Bezeichnung angelegt hat
+    dbh.sql("SELECT * FROM tlist WHERE userid = '" + userID + "' AND listtitle = '" + listTitle + "';", function (data) {
+        if (data.length > 0) {
+            success = 1;
+            res.send(JSON.stringify({ title: 'Eigene Listen', msg: 'Es existiert bereits eine Liste mit der Bezeichnung "' + listTitle + '".', success: success, sidebar: sidebar }));
+        } else {
+            success = 0;
+            var sqlStatement = "INSERT INTO tList (userid, listtitle) VALUES ('" + userID + "', '" + listTitle + "')";
+            dbh.sql(sqlStatement);
+            res.send(JSON.stringify({ title: 'Eigene Listen', msg: 'Die Liste "' + listTitle + '" wurde erstellt.', success: success, sidebar: sidebar }));
+        }
+    });
 });
 
 // Register

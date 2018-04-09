@@ -63,7 +63,42 @@ function addToList(){
     contentType: 'application/json',
     url: 'http://localhost:3000/addContentToList',
     success: function(data){
-      toastr["info"]("Das Objekt wurde der Liste '"+listName+"' hinzugefügt.","Erfolg");
+        var objectSugg = {};
+        objectSugg.contentId = contentId
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(objectSugg),
+            contentType: 'application/json',
+            url: 'http://localhost:3000/getSuggestion',
+            success: function(data) {
+                let str = "";
+                for(let e of JSON.parse(data)){
+                    str += e;
+                }
+                if(str !== "") {
+                    toastr.options = {
+                        "closeButton": true,
+                        "debug": false,
+                        "newestOnTop": false,
+                        "progressBar": false,
+                        "positionClass": "toast-bottom-full-width",
+                        "preventDuplicates": false,
+                        "onclick": null,
+                        "showDuration": 500,
+                        "hideDuration": 1000,
+                        "timeOut": 5000,
+                        "extendedTimeOut": 1000,
+                        "showEasing": "swing",
+                        "hideEasing": "linear",
+                        "showMethod": "fadeIn",
+                        "hideMethod": "fadeOut"
+                    }
+                    toastr["success"]("Der Content wurde erfolgreich zu der Liste '"+listName+"' hinzugefügt! <br /><br /> Andere Listen mit diesem Content enthalten oft auch: <br>"+str);
+                } else {
+                    toastr["success"]("Der Content wurde erfolgreich zu der Liste '" + listName + "' hinzugefügt!")
+                }
+            }
+        })
       $('#AddContentToList').modal('hide');
     }
   });

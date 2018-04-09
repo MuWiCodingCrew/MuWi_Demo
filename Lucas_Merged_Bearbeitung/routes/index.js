@@ -109,6 +109,13 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
     });
 });
 
+router.post('/getSuggestion', function(req, res){
+    var id = req.body.contentId;
+    ContentAssociation.generateSuggestionCard(id, function (data) {
+        res.send(JSON.stringify(data));
+    })
+});
+
 router.post('/addContentToList', function(req, res){
   var oldList = (!req.body.oldList);
   var listName = req.body.listName;

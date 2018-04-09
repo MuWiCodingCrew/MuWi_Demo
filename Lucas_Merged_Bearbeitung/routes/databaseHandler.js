@@ -413,14 +413,11 @@ databaseHandler.rateContent = function(userid, contentid, comment, rating, func)
 }
 
 databaseHandler.createNewListWithContent = function(createNecessary, listName, userId, contentId, func){
-  console.log("ping1");
   if(createNecessary){
-    console.log("ping2");
     databaseHandler.sql("CALL Insert_List_With_Content('"+listName+"', "+userId+", "+contentId+");",function(data){
       func(data);
     });
   } else {
-    console.log("ping3");
     databaseHandler.sql("CALL Update_List_With_Content('"+listName+"', "+userId+", "+contentId+");",function(data){
       func(data);
     });

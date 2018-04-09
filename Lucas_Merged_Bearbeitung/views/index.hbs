@@ -1,7 +1,86 @@
-﻿{{#if msg}}
-    <div class="alert alert-success">{{msg}}</div>
-{{/if}}
+﻿<div id="msgField" class="alert alert-success alert-invisible"></div>
+<div id="msgField2" class="alert alert-danger alert-invisible2"></div>
 
-<h1>{{title}}</h1>
-<p>ToDo Startseite mit eigenen Listen</p>
+<!--Button: Modal "neue Liste erstellen" öffnen-->
+<center>
+	<span data-toggle="modal" data-target="#exampleModal">
+		<button type="button" onclick="" style="float:right" class="btn btn-primary btn-floating" data-toggle="tooltip"  data-placement="top" title="Neue Liste erstellen"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+	</span>
+    <h1>{{title}}</h1>
+	<br/>
+    <hr />
+</center>
 
+
+<!--Modal: Neue Liste erstellen-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Neue Liste erstellen</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form>
+					<div class="form-group">
+						<label for="recipient-name" class="col-form-label">Titel:</label>
+						<input type="text" name="listTitle" class="form-control" id="listTitle">
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-outline-info" data-dismiss="modal">Abbrechen</button>
+				<button type="button" id="submitButton" onclick="sendID()" class="btn btn-primary">Liste erstellen</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<br/>
+<br/>
+
+<div id="myFrame">
+{{#each listData}}
+    <li><h4>{{this.ListTitle}}</h4></li>
+	<p>ToDo Content der Liste anzeigen!</p>
+	<br/>
+{{/each}}
+</div>
+
+<script>
+function sendID(){
+  var obj = {
+	listTitle: $("#listTitle").val(),
+    userid: {{userData.UserID}}
+  }
+
+  $.ajax({
+    type: 'POST',
+    data: JSON.stringify(obj),
+    contentType: 'application/json',
+    url: 'http://localhost:3000/newList',
+    success: function(data){
+	  
+	  if(JSON.parse(data).success == 0){
+		//$('#msgField').text(JSON.parse(data).msg);
+		//$('#msgField').removeClass("alert-invisible");
+		//$('#msgField2').addClass("alert-invisible2");
+		location.reload();
+	  }else{
+		$('#msgField2').text(JSON.parse(data).msg);
+		$('#msgField2').removeClass("alert-invisible2");
+		$('#msgField').addClass("alert-invisible");
+	  }
+	  $("#exampleModal").modal('hide');
+    }
+  });
+}
+
+$('document').keypress(function(event) {
+        if (event.keyCode == 13) {
+            $('#submitButton').click();
+        }
+    });
+</script>

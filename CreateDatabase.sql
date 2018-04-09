@@ -1,3 +1,4 @@
+﻿DROP DATABASE MuWi;
 CREATE database MuWi;
 CREATE table MuWi.tUser (UserID int NOT NULL AUTO_INCREMENT, EMail varchar(255), Surname varchar(255), Prename varchar(255), isStudent binary, UNIQUE(UserID), PRIMARY KEY(UserID));
 CREATE table MuWi.tBook (BookID int NOT NULL AUTO_INCREMENT, Title varchar(255) NOT NULL, UserID int NOT NULL, PRIMARY KEY (BookID), FOREIGN KEY (UserID) REFERENCES tUser(UserID));
@@ -5,10 +6,10 @@ CREATE table MuWi.tChapter (ChapterID int NOT NULL AUTO_INCREMENT, Title varchar
 CREATE table MuWi.tContent (ContentID int NOT NULL AUTO_INCREMENT, Title varchar(255) NOT NULL, Description varchar(255), ContentType varchar(255) NOT NULL, ContentData varchar(255) NOT NULL, PRIMARY KEY (ContentID));
 CREATE table MuWi.tTag (TagID int NOT NULL AUTO_INCREMENT, Title varchar(255) NOT NULL, PRIMARY KEY (TagID), INDEX(Title));
 CREATE table MuWi.tContentClassification (ContentClassificationID int NOT NULL AUTO_INCREMENT, ContentID int NOT NULL, TagID int NOT NULL, PRIMARY KEY (ContentClassificationID), FOREIGN KEY (ContentID) REFERENCES tContent(ContentID), FOREIGN KEY (TagID) REFERENCES tTag(TagID));
-CREATE table MuWi.tList (ListID int NOT NULL AUTO_INCREMENT, ChapterID int NULL, UserID int NOT NULL, PRIMARY KEY (ListID), FOREIGN KEY (UserID) REFERENCES tUser(UserID), FOREIGN KEY (ChapterID) REFERENCES tChapter(ChapterID));
+CREATE table MuWi.tList (ListID int NOT NULL AUTO_INCREMENT, ChapterID int NULL, UserID int NOT NULL, ListTitle varchar(255), PRIMARY KEY (ListID), FOREIGN KEY (UserID) REFERENCES tUser(UserID), FOREIGN KEY (ChapterID) REFERENCES tChapter(ChapterID));
 CREATE table MuWi.tContentAffiliation (ContentAffiliationID int NOT NULL AUTO_INCREMENT, ListID int NOT NULL, ContentID int NOT NULL, PRIMARY KEY (ContentAffiliationID), FOREIGN KEY (ContentID) REFERENCES tContent(ContentID), FOREIGN KEY (ListID) REFERENCES tList(ListID));
 CREATE table MuWi.tListAffiliation (ListAffiliationID int NOT NULL AUTO_INCREMENT, ListID int NOT NULL, UserID int NOT NULL, isCreator binary, PRIMARY KEY (ListAffiliationID), FOREIGN KEY (ListID) REFERENCES tlist(ListID),FOREIGN KEY (UserID) REFERENCES tuser(UserID));
-CREATE table MuWi.tContentManagement (ContentManagementID int NOT NULL AUTO_INCREMENT, ContentID int NOT NULL, UserID int NOT NULL, IsCreator binary, Rating int, UserComent varchar(255), PRIMARY KEY (ContentManagementID), FOREIGN KEY (ContentID) REFERENCES tcontent(ContentID), FOREIGN KEY (UserID) REFERENCES tuser(UserID));
+CREATE table MuWi.tContentManagement (ContentManagementID int NOT NULL AUTO_INCREMENT, ContentID int NOT NULL, UserID int NOT NULL, IsCreator binary, Rating int, UserComment varchar(255), PRIMARY KEY (ContentManagementID), FOREIGN KEY (ContentID) REFERENCES tcontent(ContentID), FOREIGN KEY (UserID) REFERENCES tuser(UserID));
 CREATE VIEW MuWi.vContent AS (SELECT a.*, d.ChapterID, c.ListID, d.Title AS 'ChapterTitle' FROM (((MuWi.tcontent AS a INNER JOIN MuWi.tContentAffiliation AS b ON a.ContentID = b.ContentID) INNER JOIN MuWi.tlist as c ON b.ListID = c.ListID) INNER JOIN MuWi.tchapter as d ON c.ChapterID = d.ChapterID));
 CREATE VIEW MuWi.vTagList AS (SELECT a.*, c.tagid, c.Title AS 'tagTitle' FROM ((MuWi.vContent as a INNER JOIN MuWi.tcontentclassification as b ON a.ContentID = b.ContentID) INNER JOIN MuWi.ttag as c ON b.TagID = c.tagid));
 CREATE VIEW MuWi.vChapterList AS (Select ch.ChapterID, ch.Title AS 'ChapterTitle', bo.BookID, bo.Title AS 'BookTitle', bo.UserID, us.Surname, us.Prename FROM(MuWi.tchapter AS ch INNER JOIN MuWi.tbook AS bo ON(ch.BookID=bo.BookID) INNER JOIN MuWi.tuser AS us ON(bo.UserID=us.UserID)));
@@ -16,9 +17,9 @@ INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Maria.Wolff
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Tim.Rosenau@gmx.de", "Rosenau", "Tim", 1);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Lucas.Thielicke@gmx.de", "Thielicke", "Lucas", 1);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Julien.Fitzlaff@gmx.de", "Fitzlaff", "Julien", 1);
+INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Claudia.Lemke@gmx.de", "Lemke", "Claudia", 0);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Ricardo.Rosinski@gmx.de", "Rosinski", "Ricardo", 1);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Gert.Faustmann@gmx.de", "Faustmann", "Gert", 0);
-INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Claudia.Lemke@gmx.de", "Lemke", "Claudia", 0);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Kathrin.Kirchner@gmx.de", "Kirchner", "Kathrin", 0);
 INSERT INTO MuWi.tbook (title, userid) VALUES ("Einführung in die Wirtschaftsinformatik I", 5);
 INSERT INTO MuWi.tbook (title, userid) VALUES ("Einführung in die Wirtschaftsinformatik II", 5);

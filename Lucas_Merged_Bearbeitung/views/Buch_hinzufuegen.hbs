@@ -1,1 +1,36 @@
-﻿
+﻿<div class="bookWrapper">
+  <h1>Buch/Vorlesung hinzufügen</h1>
+  <p>Um ein Buch oder eine Vorlesung hinzuzufügen, gib einen Buchtitel pder Namen der Vorlesung an. <br />Zusätzlich müssen hier Kapitel bzw. Gliederungspunkte angelegt werden, um die Inhalte besser strukturieren zu können.</p>
+  <form id="createBookForm" action="/createBookWithChapter" method="post">
+    <div class="md-form">
+      <input type="text" id="bookTitleInput" name="buchtitel" class="form-control">
+      <label for="bookTitleInput">Buchtitel/Vorlesungstitel</label>
+    </div>
+    <div class="chips chips-placeholder"></div>
+    <input type="text" name="chapterList" style="visibility:hidden;" id="chapterContainer"></input>
+    <input type="text" name="userId" style="visibility:hidden;" id="userIdContainer"></input>
+    <button class="btn btn-primary" onclick="createBook()">Erstellen</button>
+  </form>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('.chips-placeholder').material_chip({
+        placeholder: '+ weitere',
+        secondaryPlaceholder: 'Kapitel',
+      });
+    });
+
+    function createBook(){
+      var chapterArr = [];
+
+      for(let e of $('.chips-placeholder').children()){
+        chapterArr.push($(e).text());
+      }
+      chapterArr.pop();
+
+      $('#chapterContainer').val(JSON.stringify(chapterArr));
+      $('#userIdContainer').val({{userData.UserID}});
+
+      document.getElementById('createBookForm').submit();
+    }
+  </script>
+</div>

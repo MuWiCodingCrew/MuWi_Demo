@@ -403,6 +403,7 @@ databaseHandler.generateSidebar = function (callback) {
             html += '</ul>\n';
             html += '</li>\n';
         }
+
         return callback(html);
     });
 };

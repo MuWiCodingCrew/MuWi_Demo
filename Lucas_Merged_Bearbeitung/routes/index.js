@@ -8,6 +8,7 @@ var bodyParser = require('body-Parser');
 var ContentAssociation = require('./ContentAssociation');
 var User = require('../models/user');
 var global = require('../global.js');
+var async = require("async");
 
 var sidebar;
 dbh.generateSidebar(function (html) {
@@ -24,6 +25,14 @@ router.get('/', ensureAuthenticated, function (req, res) {
           res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar, userData: userData, listData: data2 });
         });
     });
+});
+
+router.get('/addBook', ensureAuthenticated, function(req,res){
+  var userData;
+  dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function(data){
+    userData = data[0];
+    res.render('Buch_hinzufuegen',{sidebar: sidebar, userData: userData});
+  });
 });
 
 router.post('/contentlist', ensureAuthenticated, function (req, res) {
@@ -115,6 +124,27 @@ router.get('/Kapitel/:chapterID', ensureAuthenticated, function (req, res) {
         });
     });
 });
+
+router.post('/createBookWithChapter', function(req,res){
+  var bTitle = req.body.buchtitel;
+  var uId = req.body.userId;
+  var cList = req.body.chapterList;
+
+  dbh.sql("INSERT INTO tbook (userid, title) VALUES ("+uId+",'"+bTitle+"')",function(data){
+    let arr = [];
+    arr = JSON.parse(cList);
+
+    async.eachSeries(arr,function(item, callback){
+      dbh.sql("CALL Create_Chapter('"+bTitle+"','"+item+"', "+uId+")");
+      callback(null);
+    });
+
+    dbh.generateSidebar(function (html) {
+        sidebar = html;
+        res.redirect("/");
+    });
+  })
+})
 
 router.post('/getSuggestion', function(req, res){
     var id = req.body.contentId;

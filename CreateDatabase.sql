@@ -117,7 +117,6 @@ BEGIN
     COMMIT WORK;
 
 END$$
-
 CREATE PROCEDURE MuWi.`Update_List_With_Content`(
     IN p_listName VARCHAR(255),
     IN p_userid int,
@@ -156,6 +155,29 @@ BEGIN
 			INSERT INTO MuWi.tcontentclassification (ContentID, TagID) VALUES (p_contentID, v_tagId);
 		END;
 	END IF;
+
+    COMMIT WORK;
+
+END$$
+CREATE PROCEDURE MuWi.`Create_Chapter`(
+    IN p_bookTitle VARCHAR(255),
+    IN p_chapterTitle VARCHAR(255),
+    IN p_userId int
+)
+BEGIN
+
+    DECLARE v_bookId int;
+    DECLARE v_chapterId int;
+    DECLARE v_listId int;
+
+    START TRANSACTION;
+
+	SELECT bookid INTO v_bookId FROM MuWi.tbook WHERE title = p_bookTitle AND userid = p_userId;
+	INSERT INTO MuWi.tchapter (title, bookid) VALUES (p_chapterTitle, v_bookId);
+    SELECT chapterid INTO v_chapterId FROM MuWi.tchapter WHERE title = p_chapterTitle AND bookid = v_bookId;
+    INSERT INTO MuWi.tlist (chapterid, userid, listtitle) VALUES (v_chapterId, p_userId, p_chapterTitle);
+    SELECT listid INTO v_listId FROM MuWi.tlist WHERE listtitle = p_chapterTitle AND chapterid = v_chapterId;
+    INSERT INTO MuWi.tlistaffiliation (listid, userid, iscreator) VALUES (v_listId,p_userId,1);
 
     COMMIT WORK;
 

@@ -18,8 +18,8 @@ INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Maria.Wolff
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Tim.Rosenau@gmx.de", "Rosenau", "Tim", 1);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Lucas.Thielicke@gmx.de", "Thielicke", "Lucas", 1);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Julien.Fitzlaff@gmx.de", "Fitzlaff", "Julien", 1);
-INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Claudia.Lemke@gmx.de", "Lemke", "Claudia", 0);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Ricardo.Rosinski@gmx.de", "Rosinski", "Ricardo", 1);
+INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Claudia.Lemke@gmx.de", "Lemke", "Claudia", 0);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Gert.Faustmann@gmx.de", "Faustmann", "Gert", 0);
 INSERT INTO MuWi.tuser (email, surname, prename, isstudent) VALUES ("Kathrin.Kirchner@gmx.de", "Kirchner", "Kathrin", 0);
 INSERT INTO MuWi.tbook (title, userid) VALUES ("Einführung in die Wirtschaftsinformatik I", 5);
@@ -117,9 +117,7 @@ BEGIN
     COMMIT WORK;
 
 END$$
-DELIMITER ;
 
-DELIMITER $$
 CREATE PROCEDURE MuWi.`Update_List_With_Content`(
     IN p_listName VARCHAR(255),
     IN p_userid int,
@@ -132,6 +130,32 @@ BEGIN
 
 	SELECT listid INTO v_ListId FROM MuWi.tlist WHERE listtitle = p_listName;
     INSERT INTO MuWi.tcontentaffiliation (ListID, ContentID) VALUES (v_ListId, p_contentId);
+
+    COMMIT WORK;
+
+END$$
+CREATE PROCEDURE MuWi.`Insert_Update_Tag`(
+    IN p_tagTitle VARCHAR(255),
+    IN p_contentID int
+)
+BEGIN
+
+    DECLARE v_tagId int;
+
+    START TRANSACTION;
+
+	IF EXISTS( SELECT * FROM MuWi.ttag WHERE Title = p_tagTitle) THEN
+		BEGIN
+			SELECT tagid INTO v_tagId FROM MuWi.ttag WHERE Title = p_tagTitle;
+			INSERT INTO MuWi.tcontentclassification (ContentID, TagID) VALUES (p_contentID, v_tagId);
+		END;
+	ELSE
+		BEGIN
+			INSERT INTO MuWi.ttag (Title) VALUES (p_tagTitle);
+            SELECT tagid INTO v_tagId FROM MuWi.ttag WHERE Title = p_tagTitle;
+			INSERT INTO MuWi.tcontentclassification (ContentID, TagID) VALUES (p_contentID, v_tagId);
+		END;
+	END IF;
 
     COMMIT WORK;
 

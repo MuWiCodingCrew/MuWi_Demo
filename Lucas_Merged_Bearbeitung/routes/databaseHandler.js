@@ -424,4 +424,183 @@ databaseHandler.createNewListWithContent = function(createNecessary, listName, u
   }
 }
 
+databaseHandler.getMyLists = function(id, func){
+  databaseHandler.sql("SELECT * from MuWi.vusertocontentvialist WHERE userid = '" + id + "' AND listtitle IS NOT null ORDER BY listid ASC;", function(data){
+    var tmpList = [];
+    var finalArr = [];
+    var tmpObj;
+
+    if(data.length === 0){
+      func([]);
+    } else {
+      for(var i=0;i<data.length;i++){
+        if(typeof tmpObj === "undefined"){
+          tmpObj = {
+            listtitle: data[i].ListTitle,
+            listid: data[i].listid,
+            data: []
+          };
+          tmpList.push({ContentID: data[i].ContentID, Title: data[i].Title, Description: data[i].Description, ContentType: data[i].ContentType, ContentData: data[i].ContentData});
+        } else {
+          if(data[i].listid === tmpObj.listid){
+            tmpList.push({ContentID: data[i].ContentID, Title: data[i].Title, Description: data[i].Description, ContentType: data[i].ContentType, ContentData: data[i].ContentData});
+          } else {
+            tmpObj.data = tmpList;
+            finalArr.push(tmpObj);
+
+            tmpObj = {
+              listtitle: data[i].ListTitle,
+              listid: data[i].listid,
+              data: []
+            };
+
+            tmpList = [];
+            tmpList.push({ContentID: data[i].ContentID, Title: data[i].Title, Description: data[i].Description, ContentType: data[i].ContentType, ContentData: data[i].ContentData});
+          }
+        }
+      }
+      tmpObj.data = tmpList;
+      finalArr.push(tmpObj);
+
+      generateMyListNetflix(finalArr, func);
+    }
+  });
+}
+
+function generateMyListNetflix(data, func){
+  var arr = [];
+
+  for(let e of data){
+    arr.push("<li><h4>"+e.listtitle+"</li></h4>");
+    arr = arr.concat(generateCaroussel(e.data));
+    arr.push("<hr />");
+  }
+  func(arr);
+}
+
+function generateCaroussel(data){
+  let numberOfItems = 3;
+  let tmp = "";
+  let arr = [];
+  let modalhtml = "";
+  let modalarr = [];
+  let i = 0;
+  let path = "";
+  let route = "";
+
+  for (let e of data) {
+
+      path = e.ContentData.replace('./', '%2E%2F');
+      path = path.replace('/', '%2F');
+
+      tmp = "";
+
+      if (i % numberOfItems == 0) {
+          if (i == 0) {
+            tmp += '<div id="multi-item-example" class="carousel slide carousel-multi-item" data-ride="carousel" data-interval="false">';
+            tmp += '<div class="controls-top">';
+            tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="prev"><i class="fa fa-chevron-left"></i></a>';
+            tmp += '<a class="btn-floating" href="#multi-item-example" data-slide="next"><i class="fa fa-chevron-right"></i></a>';
+            tmp += '</div>';
+            tmp += '<div class="carousel-inner" role="listbox">';
+            tmp += '<div class="carousel-item active">';
+          } else {
+            tmp += '<div class="carousel-item">';
+          }
+          tmp += '<div class="col-md-4">';
+      } else {
+        tmp += '<div class="col-md-4 clearfix d-none d-md-block">';
+      }
+
+      tmp += '<div class="card mb-2">';
+
+      switch (e.ContentType.toLowerCase()) {
+          case 'png':
+          case 'jpg':
+              route = "../media/image/";
+              tmp += '<img style="cursor:pointer" class="img-fluid" src="' + route + path + '" alt="' + e.Title + '" data-toggle="modal" data-target="#' + e.ContentID + 'Modal"/>';
+
+              modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+              modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+              modalhtml += '<div class="modal-content">\n';
+              modalhtml += '<div class="modal-header">\n';
+              modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+              modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '<div class="modal-body">\n';
+              modalhtml += '<img class="img-fluid" src="' + route + path + '" alt="' + e.Title + '"/>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '<div class="modal-footer">\n';
+              modalhtml += '<h6>' + e.Description + '</h6>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              break;
+          case 'mp4':
+              route = "../media/stream/";
+              tmp += '<video class="img-fluid" onmouseover="play()" onmouseout="pause()" onclick="webkitRequestFullscreen()">';
+              tmp += '<source src="' + route + path + '" type="video/mp4">';
+              tmp += '</video>';
+              break;
+          case 'mp3':
+              route = "../media/stream/";
+              tmp += '<img class="img-fluid" src="../media/image/%2E%2Fupload%2F3_MP3ICON.png" />';
+              tmp += '<audio style="width:auto" class="img-audio" controls>';
+              tmp += '<source src="' + route + path + '" type="audio/mp3">';
+              tmp += '</audio>';
+              break;
+          case 'pdf':
+              route = "../media/document/";
+              tmp += '<div style="height:300px" width="auto">';
+              tmp += '<iframe style="height:100%;width:100%" src="' + route + path + '"></iframe>';
+              tmp += '<button style="position:relative;float:left;bottom:60%;opacity:0.8;width:90%" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#' + e.ContentID + 'Modal">Open Fullscreen</button>';
+              tmp += '</div>';
+
+              modalhtml += '<div id="' + e.ContentID + 'Modal" class="modal fade" role="dialog" style="text-align:center">\n';
+              modalhtml += '<div class="modal-dialog modal-lg" style="display:inline-block">\n';
+              modalhtml += '<div class="modal-content">\n';
+              modalhtml += '<div class="modal-header">\n';
+              modalhtml += '<h4 class="modal-title">' + e.Title + '</h4>\n';
+              modalhtml += '<button type="button" class="close" data-dismiss="modal">&times;</button>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '<div class="modal-body">\n';
+              modalhtml += '<iframe width="1000" height="700" src="' + route + path + '#zoom=75"></iframe>';
+              modalhtml += '</div>\n';
+              modalhtml += '<div class="modal-footer">\n';
+              modalhtml += '<h6>' + e.Description + '</h6>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              modalhtml += '</div>\n';
+              break;
+          default:
+      }
+
+      tmp += '<div class="card-body">';
+      tmp += '<h4 class="card-title"> ' + e.Title + ' </h4>';
+      tmp += '<p class="card-text">' + e.Description + '</p>';
+      tmp += '<a class="btn btn-primary" href="' + route + path + '" download="' + e.Title + '">Download</a>';
+      tmp += '<button class="btn btn-primary btn-rate-content" onclick="openRateModal(this)" data-contentid="'+e.ContentID+'" data-chapterid="'+e.ChapterID+'">Rate Me</button>';
+      tmp += '<button type="button" class="btn btn-primary btn-xs" data-content-id="' + e.ContentID + '" data-toggle="modal" data-target=".bd-example-modal-sm" onclick="populateLists(this)">+</button>';
+      tmp += '</div>';
+      tmp += '</div>';
+      tmp += '</div>';
+      if (i % numberOfItems == numberOfItems - 1) {
+        tmp += '</div>'
+      } else if (i == data.length-1) {
+        tmp += '</div>'
+      }
+      if (i == data.length - 1) {
+        tmp += '</div>';
+        tmp += '</div>';
+      }
+      modalarr.push(modalhtml);
+      arr.push(tmp);
+      i++;
+  }
+  arr = arr.concat(modalarr);
+  return arr;
+}
+
 module.exports = databaseHandler;

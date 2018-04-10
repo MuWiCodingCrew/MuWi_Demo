@@ -42,11 +42,9 @@
 <br />
 
 <div id="myFrame">
-    {{#each listData}}
-    <li><h4>{{this.ListTitle}}</h4></li>
-    <p>ToDo Content der Liste anzeigen!</p>
-    <br />
-    {{/each}}
+  {{#each listData}}
+    {{{this}}}
+  {{/each}}
 </div>
 
 <script>

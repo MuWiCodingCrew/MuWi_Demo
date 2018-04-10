@@ -4,8 +4,13 @@ var router = express.Router();
 var fs = require('fs');
 var dbh = require('./databaseHandler');
 var upload = require('express-fileupload');
-
+var async = require("async");
 var User = require('../models/user');
+
+var sidebar;
+dbh.generateSidebar(function (html) {
+    sidebar = html;
+});
 
 router.use(upload());
 
@@ -74,27 +79,33 @@ router.post('/uploadFile/:chapterID', function (req, res) {
     var listID = req.params.chapterID;
     if (req.files) {
         var file = req.files.upfile;
+        var tags = req.body.tagsJSON;
         var filename = file.name;
         var title = filename.split('.')[0];
         var type = filename.split('.')[1];
         var comment = req.body.comment;
         var contentID;
         var path = './upload/';
-                
-        var sqlInserttcontent = "INSERT INTO tcontent (Title, Description, ContentType, ContentData) VALUES ('" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')"; 
+        var sqlInserttcontent = "INSERT INTO tcontent (Title, Description, ContentType, ContentData) VALUES ('" + title + "', '" + comment + "', '" + type + "', '" + path + filename + "')";
         dbh.sql(sqlInserttcontent, function (result) {
             contentID = result.insertId;
 
-            dbh.sql('UPDATE tcontent SET ContentData="' + path + contentID + '_' + filename +'" WHERE ContentID ='+contentID, function () {
+            let arr = JSON.parse(tags);
+            arr.pop();
+
+            async.eachSeries(arr,function(item, callback){
+              dbh.sql("CALL Insert_Update_Tag('"+item+"', "+contentID+")");
+              callback(null);
             });
 
+            dbh.sql('UPDATE tcontent SET ContentData="' + path + contentID + '_' + filename +'" WHERE ContentID ='+contentID+';');
+
             dbh.sql("SELECT UserID FROM tuser WHERE EMail ='"+req.user.username+"'", function (data) {
-                var userID = data[0].UserID;   
+                var userID = data[0].UserID;
                 var sqlInserttcontentaffiliation = "INSERT INTO tcontentaffiliation (ListID, ContentID) VALUES (" + listID + ", " + contentID + ")";
                 var sqlInserttcontentmanagement = "INSERT INTO tcontentmanagement (ContentID, UserID, IsCreator, UserComent) VALUES (" + contentID + ", " + userID + ", 1, '')";
 
-                dbh.sql(sqlInserttcontentaffiliation, function () {
-                });
+                dbh.sql(sqlInserttcontentaffiliation);
 
                 dbh.sql(sqlInserttcontentmanagement, function () {
 
@@ -105,13 +116,14 @@ router.post('/uploadFile/:chapterID', function (req, res) {
                         }
                         else {
                             console.log("Datei hochgeladen.")
+                            res.redirect('/');
                         }
                     })
                 });
             });
         });
-            
-        
+
+
     }
     else {
         res.send('No Files selected.');

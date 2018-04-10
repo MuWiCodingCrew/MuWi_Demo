@@ -17,12 +17,11 @@ dbh.generateSidebar(function (html) {
 /* GET home page. */
 router.get('/', ensureAuthenticated, function (req, res) {
     var userData;
-    var listData;
+
     dbh.sql("SELECT * FROM tuser WHERE email = '" + req.user.username + "';", function (data) {
         userData = data[0];
-        dbh.sql("SELECT * FROM tlist WHERE userid = '" + userData.UserID + "' AND listtitle IS NOT NULL;", function (data2) {
-            listData = data2;
-            res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar, userData: userData, listData: listData });
+        dbh.getMyLists(userData.UserID, function (data2) {
+          res.render('index', { title: 'Eigene Listen', msg: '', sidebar: sidebar, userData: userData, listData: data2 });
         });
     });
 });
@@ -210,7 +209,7 @@ router.post('/register', function(req, res){
 	};
 	var sqlStatement = "INSERT INTO tUser (EMail, Surname, Prename, IsStudent) VALUES ('" + username + "', '" + nachname + "', '" + vorname + "', '" + isStudent + "')";
 	dbh.sql(sqlStatement);
-	res.render('index', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.', sidebar: sidebar });
+	res.render('indexNoUser', { title: 'MuWI', msg: 'Sie haben sich erfolgreich registriert und können sich nun einloggen.', sidebar: sidebar });
 });
 
 // Login
@@ -244,7 +243,7 @@ passport.deserializeUser(function(id, done) {
 });
 
 router.post('/login',
-		passport.authenticate('local', {successRedirect:'/', failureRedirect:'/',failureFlash: true}),
+		passport.authenticate('local', {successRedirect:'/', failureRedirect:'/indexNoUser',failureFlash: true}),
 		function(req, res) {
 	res.redirect('/');
 });
